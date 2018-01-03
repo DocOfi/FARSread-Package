@@ -1,5 +1,5 @@
 ---
-title: "Other functions in readFARS"
+title: "Other functions in FARSread"
 author: "Edmund julian L Ofilada"
 date: "2018-01-02"
 output:
@@ -14,11 +14,11 @@ vignette: >
 
 
 
-## Package readFARS 
+## Package FARSread 
 
-Package readFARS was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). This document will familiarize the reader with the `fars_summarize_years` function and the `The fars_map_state` function from the package readFARS.
+Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). This document will familiarize the reader with the `fars_summarize_years` function and the `The fars_map_state` function from the package readFARS.
 
-This is the second vignette for the package readFARS.  The first one entitled "Introduction to readFARS" familiarizes the reader with the function `fars_read` which reads the FARS data from the NHSTA into R.  If you haven't read it yet, we advise that you read it before proceeding with this second tutorial.
+This is the second vignette for the package FARSread.  The first one entitled "Introduction to FARSread" familiarizes the reader with the function `fars_read` which reads the FARS data from the NHSTA into R.  If you haven't read it yet, we advise that you read it before proceeding with this second tutorial.
 
 ### Data: fars2015
 
@@ -432,7 +432,7 @@ I hope you found our short demonstration of the package readFARS entertaining as
 
 ### References
 
-- FARS Analytical User's Manual. 1975 - 2016. U. S. Department of Transportation. National Highway Traffic Safety Administration. National Center for Statistics and Analysis. Washington, D.C. 20590
+- FARS Analytical User's Manual. 1975 - 2016. U. S. Department of Transportation. National Highway Traffic Safety Administration. National Center for Statistics and?Analysis. Washington, D.C. 20590
 
 - National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx) website
 
