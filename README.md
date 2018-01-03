@@ -1,5 +1,5 @@
 ---
-title: "Package readFARS"
+title: "Package FARSread"
 author: "DocOfi"
 date: "March 26, 2017"
 output: 
@@ -11,7 +11,7 @@ output:
     toc: yes
 ---
 
-## Package readFARS 
+## Package FARSread
 
 The goal of this package is to create a summary and visualization of the Fatality Analysis Reporting System (FARS) data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). FARS contains data derived from a census of fatal motor vehicle traffic crashes within the 50 States, the District of Columbia, and Puerto Rico. 
 
