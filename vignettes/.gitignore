@@ -1,3 +1,6 @@
 *.html
 *.R
-
+accident_2015.csv.bz2
+accident_2015.csv
+accident_2014.csv.bz2
+accident_2013.csv.bz2
