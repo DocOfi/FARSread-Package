@@ -1,0 +1,374 @@
+---
+title: "Other functions in readFARS"
+author: "Edmund julian L Ofilada"
+date: "`r Sys.Date()`"
+output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+        toc: yes
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Package readFARS 
+
+Package readFARS was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). This document will familiarize the reader with the `fars_summarize_years` function and the `The fars_map_state` function from the package readFARS.
+
+This is the second vignette for the package readFARS.  The first one entitled "Introduction to readFARS" familiarizes the reader with the function `fars_read` which reads the FARS data from the NHSTA into R.  If you haven't read it yet, we advise that you read it before proceeding with this second tutorial.
+
+### Data: fars2015
+
+Fatality Analysis Reporting System or FARS contains data derived from a census of fatal motor vehicle traffic crashes within the 50 States, the District of Columbia, and Puerto Rico. FARS data is available for every year since FARS was established in 1975.
+
+Interested parties may access data tables at [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx), download files via FTP at ftp://ftp.nhtsa.dot.gov/fars/, or make requests through the [Publications and Data Requests page](www-nrd.nhtsa.dot.gov/Cats/Index.aspx). Information requests can also be made by phone at 800-934-8517, or by e-mail at ncsaweb@dot.gov 
+
+A copy of the FARS data for the year 2015 is included in this package and will be used for this tutorial.
+
+### Reading the data in R: The fars_read function
+
+The fars_read() is the function we use to read the fars data in R. The fars data usually comes in a .csv format with a file name like **"accident.csv"**. It's a good idea to rename the file to reflect the year the data was obtained, like **"accident_2015"** in case you are working with mulitple years. We use the file name as an argument to the function and save it as an R object with the name `accident_2015` lor any name you like. This function was discussed extensively in the first tutorial and will be mentioned here only in passing.
+
+### The fars_summarize_years function
+
+The `fars_summarize_years` function is designed to create a table that will show the number of traffic accidents for every month in a single or a number of years, provided that you have the data from the NHSTA in your working directory.  
+
+It takes as input the year that the user wants to analyze. This is specially advantageous to new users in R who may not be familiar with manipulating data in order to arrive at the information they need. The FARS data has many valuables which provide a lot of information.  But, if you're only interested in comparing the number of traffic accidents by month in a particular year or several years, then the 'fars_summarize_years` can save you a lot of time and effort.
+
+To begin we must first obtain the data from the NHSTA. This can be accomplished by using your browser and downloading the data from their ftp site (the URL for the ftp site is available above) or requesting the data by phone or email. If you download the data using the ftp site, you will receive a zip file containing several `.csv` files. We are interested in the file named `accident.csv`.The data is available for each year beginning in 1975. Separate downloads will have to be made for each year of data you wish to analyze.
+
+You may unzip the file using a local software in your computer such as `WinRAR` in Windows or use the unzip function in R. After unzipping the files, it's a good idea to change the name of the file to reflect the year the data was derived from. Changing `accident.csv` to `accident_2015.csv` will avoid confusion in case you are working with multiple years. Another reason why it's a good idea is because you cannot keep a file with same file name in the same directory. 
+
+You are now ready to use the `fars_read` function to explore the data. You might find the first vignette included in this package, "Introduction to readFARS" helpful for this purpose. Let's load the package `readFARS` to access the `fars_summarize_years`  and `fars_map_state` functions .
+
+Now that we have access to the `fars_summarize_function` and we also have our data, `accident_2015.csv`. What else do we need? 
+
+Before we can use the `fars_summarize_function`, we must first read in the file `accident_2015.csv` in R, using the `fars_read` function and save the output as a variable in R. 
+
+We then save that output/variable to a .csv.bz2 file. **WHY?** Unlike the `fars_read` function which reads into R a .csv file, the `fars_summarize_year` function requires a .csv.bz2 file to work. 
+
+Fortunately, we have  the `write.csv` function in R to do that. **WARNING - using the `write.csv` function as shown below will create the file `accident_2015.csv.bz2` in your working directory**.
+
+```{r demosumfunc}
+
+accident_2015 <- fars_read("accident_2015.csv") ### read the downoaded .csv file and save it as accident_2015
+
+write.csv(accident_2015, ### We use accident_2015 as the first argument in the function write.csv
+          file = bzfile("accident_2015.csv.bz2"), ### create a new file in .csv.bz2 format with the name accident_2015.csv.bz2
+          row.names = FALSE) ### do not create a new column of rownames when you read in the file in R
+
+fars_summarize_years(2015) ### The first argument to this function is the year you want to analyze. You may input as many years as you wish provided that the data for that year is available in a .csv.bnz2 format in your working directory
+```
+
+the output of the `fars_summarize_years` function is a table providing a summary of the number of tracffic accidents for each month of 2015.  
+
+Notice that table above is the same table we created in the first tutorial but it only took us one line of code with one argument `2015` in order to arrive at the same output. Just as an exercise we will plot the result in the same way that we did in the previous tutorial. 
+
+```{r plotmonthcount, fig.width = 7, fig.height = 4, fig.cap="fig. 1"}
+library(forcats) ### load package forcats to change factor levels
+library(dplyr) ###load package dplyr to access %>%  forward pipe operator
+library(ggplot2) ### load package ggplot2 for plotting data
+
+most_months <- fars_summarize_years(2015) %>% ### save the output as a variable named most_months
+        mutate(mon_abb = as.factor(month.abb)) %>% ### create a new variable of abbreviations for month names
+        as.data.frame() ### save result as a data frame
+
+most_months$mon_abb <- fct_relevel(most_months$mon_abb, "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec") ### change factor levels to correctly plot the data using ggplot
+
+most_months
+
+colnames(most_months) <- c("MONTH", "count", "mon_abb")
+
+ggplot(data = most_months, aes(x = mon_abb, y = count, group = 1)) + ### select the data and variables we will plot
+        geom_line(colour = "red", linetype = "dashed", size = 1.5) + ### plot data as a line
+        geom_point(colour = "red", size = 4, shape = 21, fill = "green") + ### plot data as green round points as well
+        xlab("Month") + ### add label to x-axis
+        ggtitle("Number of Accidents Recorded per Month in 2015") ### add title
+```
+
+The plot shows the peak months for traffic accidents in 2015 were from July to October.
+
+If we wanted to compare the months in the years: 2013, 2014, and 2015, we should have done:
+
+```{r multyrs, echo=TRUE, eval=FALSE}
+fars_summarize_years(c(2013, 2014, 2015))
+```
+
+That would have given us the same output as the table above but with additional columns for the year 2013 and 2014. This will only work however, if the data for those years are available in your working directory in a .csv.bz2 file format.
+
+```{r manyyears}
+fars_summarize_years(c(2013, 2014, 2015)) ### The first argument to this function are the years 2013, 2014, and 2015. You may input as many years as you wish provided that the data for that year is available in a .csv.bnz2 format in your working directory
+```
+
+To better appreciate the information that the table contains, We will plot the output of the table. 
+
+```{r compyrs, fig.width = 7, fig.height = 4, fig.cap="fig. 2"}
+
+comp_yrs <- fars_summarize_years(c(2013, 2014, 2015)) ### sumarize data for years 2013, 2014, and 2015
+
+names(comp_yrs) <- c("month", "yr2013", "yr2014", "yr2015") ### change variable/column names to appropriate names in R
+
+comp_yrs <- comp_yrs %>% mutate(month = as.factor(month.abb)) ### change the numerical representation of months to abbreviations
+
+comp_yrs$month <- fct_relevel(comp_yrs$month, "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec") ### change factor levels to correctly plot the data using ggplot
+
+library(tidyr) ### load package tidyr so we can access the function gather()
+long_comp_yrs <- gather(comp_yrs, key = key, value = value, -month) ### change data frame structure to facilitate  plotting with ggplot
+
+ggplot(data = long_comp_yrs, aes(x = month, y = value, group = key, color = key)) + ### input the variables we want to plot
+        geom_line(linetype = "dashed", size = 1) + ### show a line plot
+        geom_point(size = 2, shape = 21) + ### show the points as well
+        xlab("Month") + ### put a label on the x axis 
+        ggtitle("Number of Accidents Recorded per Month in 2015") ### Put a title
+```
+
+It seems what the character Ethan Hunt, played by Tom Cruise in the movie Mission Impossible, said was true. "Traffic, it has memory". Based on this plot of traffic accidents from 2013 to 2015, traffic accidents have a seasonal pattern.
+
+### The fars_map_state function
+
+The `fars_map_state` function takes in two arguments or inputs. The first is a number from 1 to 56 which stands for the States in the united States including Puerto Rico and the district of Columbia.
+For some reason, the numbers 3, 7, and 14 were not used to denote a State. Using them as the first argument for the state no. or any number above 56 will result in an error.
+
+The second is a number representing the year we're interested in. Again, for this to work, we should have downloaded the .csv file for that particular year in our working directory and have created a new file from it in a .csv.bz2 format.
+
+The `fars-map_state` function also requires the data to be in .csv.bz2 format just like the `fars-summarize_years` function. But since we already created the `accident_2015.csv.bz2` file for the 2015 data in your working directory in the previous example, we can proceed to using the `fars_map_state` function right away.
+
+To examine a single map we can:
+
+```{r plotfars1, fig.width=6, fig.height=4, fig.cap="fig. 3"}
+par(mar = c(0.5,0.5,0.5,0.5)) ###Arrange the margins to fit the plot
+fars_map_state(48, ### selects the number 48 which stands for the state of Texas
+               2015) ### selects the year 2015
+```
+
+We see the lone map of the Lone Star State of Texas. Every dot on the map is a representation of where a traffic accident occured based on the latitude and longitudinal position reported in FARS data. We see that there seem to be a confluence of the dots in certain areas indicating where traffic accidents seem to happen the most.
+
+The first argument to our `fars-map_state` function is the number 48 which corresponds to the State of Texas. At the end of this document is the appendix, which contains a table of the numbers used in the FARS data and their corresponding State names. You will find this helpful when you start exploring the FARS data.
+
+Why create only one when we can have more. We can create multiple plots side by side like so:
+
+```{r plotfars2, fig.width=7, fig.height=5, fig.cap="fig. 4"}
+par(mfrow = c(1,3)) ### plot the map in three columns in a single row
+par(oma = c(2, 0,0,0)) ### specify the margins to allow for titles and texts
+par(mar=c(1,0.5,0.5,0.5)) ### specify the margins to fit the plot
+fars_map_state(48, ### selects the number 48 which stands for the state of Texas
+               2015) ### selects the year 2015
+title("The State\n of\n Texas", ###text for title
+      line=-2, ### position of the title
+      cex.main = 1, ### size of the text
+      adj = 0.8, ### left to right position of title
+      col.main= "blue") ### color of the text
+
+fars_map_state(6, ### selects the number 6 which stands for the state of California
+               2015) ### selects the year 2015
+title("The State of\n California", ###text for title
+      line=-6, ### position of the title
+      cex.main = 1, ### size of the text
+      adj = 0.9, ### left to right position of title
+      col.main= "blue") ### color of the text
+mtext("Map Plot of Traffic Accidents Using Geospatial Locationing", ### title to print
+      side = 1, ### print title on the bottom
+      line = 0, ### start printin at line 0
+      outer = TRUE, ### Use margins if available
+      cex = 1.5) ### size of the text
+
+fars_map_state(12, ### selects the number 12 which stands for the state of Florida
+               2015) ### selects the year 2015
+title("The\n State\n of\n Florida", ###text for title
+      line=-8, ### position of the title
+      adj = 0.4, ### left to right position of title
+      cex.main = 1, ### size of the text
+      col.main= "blue") ### color of the text
+```
+
+In the first tutorial we saw that the State of Texas, California, and Florida have the most number of traffic accidents for the year 2015.  For this demonstration of the `fars_map_state` function, We'll choose these States which corresponds to the number 48, 6, and 12 respectively. These will serve as the first arguments and the year 2015 for our second argument. 
+
+We can compare the distribution of traffic accidents in key cities of these States with a little help from google to tell us which cities are located where the points on the map seem to occur aggregate.
+
+If we have the `accident_2013.csv`, `accident_2014.csv`, and the `accident_2015.csv` files in our working directory, we can read them in R and create `accident_2013.csv.bz2`, `accident_2015.csv.bz2`, and `accident_2015.csv.bz2` files, which we can use to plot a map of the State of Georgia from 2013 to 2015 like so:
+
+
+```{r plotfars3, fig.width=7, fig.height=5, fig.cap="fig. 5"}
+par(mfrow = c(1,3)) ### plot the map in three columns in a single row
+par(oma = c(2, 0,0,0)) ### specify the margins to allow for titles and texts
+par(mar=c(1,0.5,0.5,0.5)) ### specify the margins to fit the plot
+fars_map_state(13, ### selects the number 48 which stands for the state of Texas
+               2013) ### selects the year 2015
+title("The State\n of\n Georgia\n 2013", ###text for title
+      line=-4, ### position of the title
+      cex.main = 1, ### size of the text
+      adj = 0.95, ### left to right position of title
+      col.main= "firebrick3") ### color of the text
+
+fars_map_state(13, ### selects the number 48 which stands for the state of Texas
+               2014) ### selects the year 2015
+title("The State\n of\n Georgia\n 2014", ###text for title
+      line=-4, ### position of the title
+      cex.main = 1, ### size of the text
+      adj = 0.95, ### left to right position of title
+      col.main= "firebrick3") ### color of the text
+mtext("Map Plot of Traffic Accidents in Georgia from 2013-2015", ### title to print
+      side = 1, ### print title on the bottom
+      line = 0, ### start printin at line 0
+      outer = TRUE, ### Use margins if available
+      cex = 1.5) ### size of the text
+
+fars_map_state(13, ### selects the number 48 which stands for the state of Texas
+               2015) ### selects the year 2015
+title("The State\n of\n Georgia\n 2015", ###text for title
+      line=-4, ### position of the title
+      cex.main = 1, ### size of the text
+      adj = 0.95, ### left to right position of title
+      col.main= "firebrick3") ### color of the text
+```
+
+Looking at these plots of Georgia, we can see there was an increase in the number of traffic accidents in Georgia from 2013 to 2015 even without looking at the numbers or a table. It also shows the the increase did not happen just in selected areas, but rather appears to have occured throughout the State. Compared to numbers or tables, plots have the advantage of conveying more information at a glance. 
+
+We can also add some features to improve the maps readability by adding a few more information. Here we re-examine the the State of Texas and add some features to easily identify certain areas of the map.  This becomes handy during presentation to highlight which areas are being referred to in the map. 
+
+But before we can plot the results, we first have to find the relative centers where most of the accidents occured.  We will first find which County in Texas has the most number of recorded traffic accidents and then find their relative position based on the geospatial location provided in the FARS data.
+
+```{r conflpoints}
+
+acc_2015 <- fars_read("accident_2015.csv") ### read in the FARS data for 2015
+
+texas <- acc_2015 %>% ### 2015 FARS data
+        filter(STATE == 48) %>% ### limit our analysis to the State of Texas
+        select(COUNTY, CITY, LONGITUD, LATITUDE) ### select the variables we need
+
+texas %>% group_by(COUNTY) %>% summarize(count = n()) %>% arrange(desc(count))
+```
+
+We see that County number 201 and 113 have the highest number of recorded tracfic accidents.  We can mark the area by drawing a circle or a square to specify our area of interest. 
+
+```{r countyloc201}
+county201 <- texas %>% ### we take our subset of the FARS data limited to the State of Texas
+        filter(COUNTY == 201) %>%  ### filter only observations for the COUNTY 201 
+        summarize(mean_lat = mean(LATITUDE), mean_long = mean(LONGITUD)) ### summarize the latitude and longitudinal position to come up with a relative position of the center where the accidents happen the most 
+
+county201 ### gives relative position where accidents happen most in County 201
+```
+
+We now have the relative center where most accidents happen in County 201 of the State of Texas.
+
+```{r countyloc133}
+county113 <- texas %>% ### we take our subset of the FARS data limited to the State of Texas
+        filter(COUNTY == 113) %>% ### filter only observations for the COUNTY 113
+        summarize(mean_lat = mean(LATITUDE), mean_long = mean(LONGITUD)) ### summarize the latitude and longitudinal position to come up with a relative position of the center where the accidents happen the most
+
+county113 ### gives relative position where accidents happen most in County 133
+```
+
+We now have the relative center where most accidents happen in County 133 of the State of Texas. Let's start plotting!
+
+```{r plotfars4, fig.width=6, fig.height=4, fig.cap="fig. 6"}
+par(oma = c(1, 0,0,0)) ### specify the margins to allow for titles and texts
+par(mar=c(0.5,0.5,0.5,0.5))
+fars_map_state(48, ### selects the number 48 which stands for the state of Texas
+               2015) ### selects the year 2015
+points(x = -95.38142, y =  29.80174, col = "red", cex = 1.2, pch = 0, lwd = 2)
+text(x = -95.38142, y =  29.80174, labels = "201", col = "red", cex = 1.2, pos = 1, offset = 1.5)
+points(x = -96.79868, y =  32.80453, col = "blue", cex = 1.2, pch = 1, lwd = 2)
+text(x = -96.79868, y =  32.80453, labels = "113", col = "blue", cex = 1.2, pos = 3, offset = 1.5)
+title("The State\n of\n Texas", ###text for title
+      line=-2, ### position of the title
+      cex.main = 1, ### size of the text
+      adj = 0.8, ### left to right position of title
+      col.main= "black") ### color of the text
+mtext("Map Plot of Traffic Accidents Using Geospatial Locationing", ### title to print
+      side = 1, ### print title on the bottom
+      line = 0, ### start printin at line 0
+      outer = TRUE, ### Use margins if available
+      cex = 1) ### size of the text
+```
+
+It turns out, Texas County 113 is **Dallas County** and Texas County 201 is **Harris County**.
+
+By providing features like circles, squares, dots or even arrows, we can improve how we convey information to our listeners during presentations.
+
+I hope you found our short demonstration of the package readFARS entertaining as well as educational and may the use of the functions in these package facilitate your analysis of the FARS data. 
+
+### Appendix
+#####List of State Number and their correspong State 
+
+|State Number |State                |
+|:------------|:--------------------|
+|`1`          |Alabama              |
+|`2`          |Alaska               |
+|`3`          |                     |
+|`4`          |Arizona              |
+|`5`          |Arkansas             |
+|`6`          |California           |
+|`7`          |                     |
+|`8`          |Colorado             |
+|`9`          |Connecticut          |
+|`10`         |Delaware             |
+|`11`         |Distric of Columbia  |
+|`12`         |Florida              |
+|`13`         |Georgia              |
+|`14`         |                     |
+|`15`         |Hawaii               |
+|`16`         |Idaho                |
+|`17`         |Illinois             |
+|`18`         |Indiana              |
+|`19`         |Iowa                 |
+|`20`         |Kansas               |
+|`21`         |Kentucky             |
+|`22`         |Louisiana            |
+|`23`         |Maine                |
+|`24`         |Maryland             |
+|`25`         |Massachusetts        |
+|`26`         |Michigan             |
+|`27`         |Minnesota            |
+|`28`         |Mississippi          |
+|`29`         |Missouri             |
+|`30`         |Montana              |
+|`31`         |Nebraska             |
+|`32`         |Nevada               |
+|`33`         |New Hampshire        |
+|`34`         |New jersey           |
+|`35`         |New Mexico           |
+|`36`         |New York             |
+|`37`         |North Carolina       |
+|`38`         |North Dakota         |
+|`39`         |Ohio                 |
+|`40`         |Oklahoma             |
+|`41`         |Oregon               |
+|`42`         |Pennsylvania         |
+|`43`         |Puerto Rico          |
+|`44`         |Rhode island         |
+|`45`         |South Carolina       |
+|`46`         |South Dakota         |
+|`47`         |Tennessee            |
+|`48`         |Texas                |
+|`49`         |Utah                 |
+|`50`         |Vermont              |
+|`51`         |Virgini islands      |
+|`52`         |Virginia             |
+|`53`         |Washington           |
+|`54`         |West virginia        |
+|`55`         |Wisconsin            |
+|`56`         |Wyoming              |
+
+####*for some reason, the numbers 3, 7, and 14 were not used* Using them as an argument for the state no. in the function `fars_map_state` or any number above 56 will result in an error.
+
+### References
+
+- FARS Analytical User's Manual. 1975 - 2016. U. S. Department of Transportation. National Highway Traffic Safety Administration. National Center for Statistics and?Analysis. Washington, D.C. 20590
+
+- National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx) website
+
+
+
+
+
+
+
