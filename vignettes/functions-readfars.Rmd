@@ -1,11 +1,12 @@
 ---
-title: "Other functions in readFARS"
+title: "Other functions in FARSread"
 author: "Edmund julian L Ofilada"
 date: "`r Sys.Date()`"
 output:
       rmarkdown::html_vignette:
-        fig_caption: yes
-        toc: yes
+      keep_md: yes
+      fig_caption: yes
+      toc: yes
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,11 +20,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Package readFARS 
+## Package FARSread
 
-Package readFARS was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). This document will familiarize the reader with the `fars_summarize_years` function and the `The fars_map_state` function from the package readFARS.
+Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). This document will familiarize the reader with the `fars_summarize_years` function and the `The fars_map_state` function from the package readFARS.
 
-This is the second vignette for the package readFARS.  The first one entitled "Introduction to readFARS" familiarizes the reader with the function `fars_read` which reads the FARS data from the NHSTA into R.  If you haven't read it yet, we advise that you read it before proceeding with this second tutorial.
+This is the second vignette for the package FARSread.  The first one entitled "Introduction to FARSread" familiarizes the reader with the function `fars_read` which reads the FARS data from the NHSTA into R.  If you haven't read it yet, we advise that you read it before proceeding with this second tutorial.
 
 ### Data: fars2015
 
@@ -47,7 +48,7 @@ To begin we must first obtain the data from the NHSTA. This can be accomplished 
 
 You may unzip the file using a local software in your computer such as `WinRAR` in Windows or use the unzip function in R. After unzipping the files, it's a good idea to change the name of the file to reflect the year the data was derived from. Changing `accident.csv` to `accident_2015.csv` will avoid confusion in case you are working with multiple years. Another reason why it's a good idea is because you cannot keep a file with same file name in the same directory. 
 
-You are now ready to use the `fars_read` function to explore the data. You might find the first vignette included in this package, "Introduction to readFARS" helpful for this purpose. Let's load the package `readFARS` to access the `fars_summarize_years`  and `fars_map_state` functions .
+You are now ready to use the `fars_read` function to explore the data. You might find the first vignette included in this package, "Introduction to FARSread" helpful for this purpose. Let's load the package `readFARS` to access the `fars_summarize_years`  and `fars_map_state` functions .
 
 Now that we have access to the `fars_summarize_function` and we also have our data, `accident_2015.csv`. What else do we need? 
 
@@ -58,7 +59,7 @@ We then save that output/variable to a .csv.bz2 file. **WHY?** Unlike the `fars_
 Fortunately, we have  the `write.csv` function in R to do that. **WARNING - using the `write.csv` function as shown below will create the file `accident_2015.csv.bz2` in your working directory**.
 
 ```{r demosumfunc}
-
+library(FARSread)
 accident_2015 <- fars_read("accident_2015.csv") ### read the downoaded .csv file and save it as accident_2015
 
 write.csv(accident_2015, ### We use accident_2015 as the first argument in the function write.csv

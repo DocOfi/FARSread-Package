@@ -1,12 +1,12 @@
 ---
-title: "Introduction to readFARS"
+title: "Introduction to FARSread"
 author: "Edmund julian L Ofilada"
 date: "`r Sys.Date()`"
 output:
       rmarkdown::html_vignette:
-        fig_caption: yes
-        toc: yes
-        
+      keep_md: yes
+      fig_caption: yes
+      toc: yes
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,9 +20,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Package readFARS 
+## Package FARSread 
 
-Package readFARS was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). This document hopes to familiarize the reader with the fars_read function from the package readFARS and the variables contained in a FARS data file.
+Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). This document hopes to familiarize the reader with the fars_read function from the package FARSread and the variables contained in a FARS data file.
 
 ### Data: fars2015
 
@@ -67,9 +67,10 @@ accident_2015 <- fars_read("accident_2015.csv")
 ```
 We are not limited as to what name to assign to the output. We can actually save the result to whatever name you like. You may find `acc_2015` or `fars_2015` easier to use as it is shorter than `accident_2015`. It contains less letters and therefore easier to type on the keyboard.
 
-For this tutorial we have downloaded the fars data for the year 2015 for you. We changed the file name from `accident.csv` to `accident_2015.csv` and read it in R. We will now use the function `fars_read` to read the file `accident_2015.csv` in your working directory and save the output in the R object `accident_2015`. My fingers needed more exercise. But before we can do all that, we'll first need to load the package `readFARS` which contains the `fars_read` function among others.
+For this tutorial we have downloaded the fars data for the year 2015 for you. We changed the file name from `accident.csv` to `accident_2015.csv` and read it in R. We will now use the function `fars_read` to read the file `accident_2015.csv` in your working directory and save the output in the R object `accident_2015`. My fingers needed more exercise. But before we can do all that, we'll first need to load the package `FARSread` which contains the `fars_read` function among others.
 
 ```{r reainfars}
+library(FARSread)
 accident_2015 <- fars_read("accident_2015.csv") ### Read the file accident_2015.csv and assign it to an R object named accident_2015
 ```
 
@@ -190,12 +191,12 @@ ggplot(data = most_months, aes(x = mon_abb, y = count, group = 1)) + ### select 
         ggtitle("Number of Accidents Recorded per Month in 2015") ### add title
 ```    
 
-We see that the peak months for traffic accidents are the months from July to october. The package readFARS has other functions which will be demonstrated on the second vignette included in this package. Among those functions is a function that creates a map plot of a State with the location of the traffic accidents shown as points in the map. 
+We see that the peak months for traffic accidents are the months from July to october. The package FARSread has other functions which will be demonstrated on the second vignette included in this package. Among those functions is a function that creates a map plot of a State with the location of the traffic accidents shown as points in the map. 
 
 To gain a better understanding of the data in FARS we have provide below a brief description of the variables included in the 2015 FARS data. The FARS data for the year 2015 is included in this package. You can view the first 6 rows of the data in R on the console by typing the following:
 
 ```{r fars2015dta, echo=TRUE, eval=FALSE}
-library(readFARS)
+library(FARSread)
 head(fars_2015)
 ```        
 
@@ -204,21 +205,21 @@ A brief description of the variables has been included in the appendix at the bo
 Raw data from the year 2013 is also available with this package. You may access them like so:
 
 ```{r rawfars2013dta, echo=TRUE, eval=FALSE}
-fars_2013 <- system.file("extdata", "accident_2013.csv", package = "readFARS") ### find the file path 
+fars_2013 <- system.file("extdata", "accident_2013.csv", package = "FARSread") ### find the file path 
 
-library(readFARS) ### load package readFARS to access functions from the package
+library(FARSread) ### load package FARSread to access functions from the package
 
 accident_2013 <- fars_read(fars_2013)
 ```
 
-This ends the first part of the tutorial for the package readFARS.  For the second tutorial, "Other functions in readFARS" we will be demonstrating the use of the function `fars_summarize_years` function and the `fars-map_state` function.
+This ends the first part of the tutorial for the package FARSread.  For the second tutorial, "Other functions in FARSread" we will be demonstrating the use of the function `fars_summarize_years` function and the `fars-map_state` function.
 
 The `fars_summarize_years` function is designed to facilitate creating a table that will show the number of traffic accidents for every month in a single or a number of years. Similar to the table we created above, but with less effort on your part. The `fars-map_state` function create a map plot using geospatial locationing to plot the location where the accidents occured in a particular State.
 
 We hope that you enjoyed our short presentation.
 
 ### Appendix
-#####List of variables in the dataset provided in package readFARS
+#####List of variables in the dataset provided in package FARSread
 
 |Variable         |Desscription                                                                             |DataType |
 |:----------------|:----------------------------------------------------------------------------------------|:--------|
