@@ -1,8 +1,7 @@
-#' Fatality Analysis Reporting System (FARS) 2015
+#' Fatality Analysis Reporting System (FARS) 2015.
 #'
-#' FARS contains data derived from the census of fatal motor vehicle traffic
-#'   crashes within the 50 States, the District of Columbia, and Puerto Rico for the
-#'   year 2015
+#' FARS contains data derived from the census of fatal motor vehicle traffic crashes
+#' within the 50 States, the District of Columbia, and Puerto Rico for the year 2015
 #'
 #' @format A data frame with 32166 rows and 52 variables:
 #' \describe{
@@ -114,11 +113,6 @@
 #'   \item{DRUNK_DR}{This data element records the number of drunk drivers involved
 #'     in the crash}
 #' }
-#' @source The 2015 FARS data was obtained from the National Highway Traffic Safety
-#'   Administration. \url{https://www.nhtsa.gov/about-nhtsa}
+#' @source \url{https://www.nhtsa.gov/about-nhtsa}
 #'
-#' @examples
-#' \dontrun{
-#' head(fars_2015)
-#' }
 "fars_2015"

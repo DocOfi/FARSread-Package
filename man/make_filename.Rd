@@ -7,8 +7,7 @@
 make_filename(year)
 }
 \arguments{
-\item{year}{A numerical vector indicating the year to include in the name of
-the file to be created.}
+\item{year}{A numerical vector for the year to include in the file name.}
 }
 \value{
 A character vector indicating the name of the file.
@@ -17,10 +16,4 @@ A character vector indicating the name of the file.
 \code{make_filename} is a wrapper for the function sprintf that returns a character
   vector containing a combination of text and the year the data was observed in
   csv.bz2 format.
-}
-\examples{
-make_filename(1988) ### returns "accident_1988.csv.bz2"
-\dontrun{make_filename("Nineteen ninety two")} ### results in error year has to
-  ### be numeric or an integer
-
 }
