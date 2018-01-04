@@ -27,11 +27,11 @@ If you have a file from FARS that is in .csv format but not in .csv.bz2
   in R.
 }
 \examples{
-\dontrun{fars_read_years((c(2013, 2014, 2015)))} ## returns a list of data frames
-  containing the variables MONTH and year for each year that data is available
-\dontrun{fars_read_years(c(2013, 2014, "nineteen ninety two"))} ## returns a list
-  of data frames containing the variable MONTH and year for the year 2013 and 2014
-  and an error indicating that "nineteen ninety two" is an invalid request
+\dontrun{fars_read_years((c(2013, 2014, 2015)))} ### returns a list of data frames
+  ### containing the variables MONTH and year for each year that data is available
+\dontrun{fars_read_years(c(2013, 2014, "nineteen ninety two"))} ### returns a list
+  ### of data frames containing the variable MONTH and year for the year 2013 and 2014
+  ### and an error indicating that "nineteen ninety two" is an invalid request
 
 }
 \seealso{
