@@ -3,7 +3,7 @@
 \docType{data}
 \name{fars_2015}
 \alias{fars_2015}
-\title{Fatality Analysis Reporting System (FARS) 2015}
+\title{Fatality Analysis Reporting System (FARS) 2015.}
 \format{A data frame with 32166 rows and 52 variables:
 \describe{
   \item{STATE}{State number corresponding to a State in the USA}
@@ -115,20 +115,13 @@
     in the crash}
 }}
 \source{
-The 2015 FARS data was obtained from the National Highway Traffic Safety
-  Administration. \url{https://www.nhtsa.gov/about-nhtsa}
+\url{https://www.nhtsa.gov/about-nhtsa}
 }
 \usage{
 fars_2015
 }
 \description{
-FARS contains data derived from the census of fatal motor vehicle traffic
-  crashes within the 50 States, the District of Columbia, and Puerto Rico for the
-  year 2015
-}
-\examples{
-\dontrun{
-head(fars_2015)
-}
+FARS contains data derived from the census of fatal motor vehicle traffic crashes
+within the 50 States, the District of Columbia, and Puerto Rico for the year 2015
 }
 \keyword{datasets}
