@@ -1,12 +1,12 @@
 #' Reading a .csv  or .csv.bz2 file into R
 #'
-#' \code{fars_read} This is a function is a wrapper fro the read_csv function in
+#' \code{fars_read} This function is a wrapper fro the read_csv function in
 #'   the package readr. It reads in a single csv file into R for analysis. For
 #'   this to work the file should be a .csv or a .csv.bz2 file located in the same
 #'   directory as the working directory and the package readr and dplyr should be
 #'   installed.
 #'
-#' @param filename A .csv or .csv.bz2 file to be read into R.
+#' @param filename A chararcter string denoting the .csv or .csv.bz2 file to be read into R.
 #'
 #' @importFrom readr read_csv
 #'

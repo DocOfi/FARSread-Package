@@ -10,7 +10,7 @@
 #'   format, you can convert it to .csv.bz2 format by using the write.csv function
 #'   in R. See vignette "Other functions in readFARS".
 #'
-#' @param years A  numerical vector indicating which years to search for in the data.
+#' @param years A numerical vector indicating which years to include in the output dataframe.
 #'
 #' @inheritParams fars_read_years
 #'

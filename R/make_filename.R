@@ -6,7 +6,7 @@
 #'
 #' @param year A numerical vector for the year to include in the file name.
 #'
-#' @return A character vector indicating the name of the file.
+#' @return A character vector indicating the name of the file in .csv.bz2 format
 #'
 make_filename <- function(year) {
         year <- as.integer(year)

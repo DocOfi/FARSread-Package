@@ -9,7 +9,7 @@
 #' @param years A numerical vector indicating which years to search for in the data.
 #'
 #' @details If you have a file from FARS that is in .csv format but not in .csv.bz2
-#'   format, you can convert it to .csv.bz2 format by using the write.csv function.
+#'   format, you can convert it to .csv.bz2 format by using the write.csv function
 #'   in R.
 #'
 #' @seealso \code{\link{make_filename}}

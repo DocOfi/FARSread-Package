@@ -13,7 +13,7 @@
 #'     in the crash}
 #'   \item{VE_FORMS}{This data element is a count of the number of vehicles in-
 #'     transport involved in the crash}
-#'   \item{PVH_INVL}{Number of Parked orWorking Vehicles Involved}
+#'   \item{PVH_INVL}{Number of Parked or Working Vehicles Involved}
 #'   \item{PEDS}{This element records the number of Persons Not a Motor
 #'     Vehicle occupant}
 #'   \item{PERNOTMVIT}{This data element is a count of the number of non-motorists
@@ -114,5 +114,8 @@
 #'     in the crash}
 #' }
 #' @source \url{https://www.nhtsa.gov/about-nhtsa}
+#'
+#' @examples
+#' \dontrun{head(fars_2015)}
 #'
 "fars_2015"
