@@ -7,7 +7,7 @@
 fars_summarize_years(years)
 }
 \arguments{
-\item{years}{A  numerical vector indicating which years to search for in the data.}
+\item{years}{A numerical vector indicating which years to include in the output dataframe.}
 }
 \value{
 A data frame with the variables MONTH and each year where data is

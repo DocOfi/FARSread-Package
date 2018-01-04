@@ -7,13 +7,13 @@
 fars_read(filename)
 }
 \arguments{
-\item{filename}{A .csv or .csv.bz2 file to be read into R.}
+\item{filename}{A chararcter string denoting the .csv or .csv.bz2 file to be read into R.}
 }
 \value{
 an R object of class "tbl_df", "tbl", "data.frame".
 }
 \description{
-\code{fars_read} This is a function is a wrapper fro the read_csv function in
+\code{fars_read} This function is a wrapper fro the read_csv function in
   the package readr. It reads in a single csv file into R for analysis. For
   this to work the file should be a .csv or a .csv.bz2 file located in the same
   directory as the working directory and the package readr and dplyr should be

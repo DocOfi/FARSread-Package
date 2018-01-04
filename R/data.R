@@ -58,9 +58,9 @@
 #'   \item{MAN_COLL}{This data element describes the orientation of two motor vehicles
 #'     in-transport when they are involved in the First Harmful Event of a collision
 #'     crash}
-#'   \item{REL_JCT1}{This data element identifies the crash's location with respect
+#'   \item{RELJCT1}{This data element identifies the crash's location with respect
 #'     to presence in an interchange area}
-#'   \item{REL_JCT2}{This data element identifies the crash's location with respect
+#'   \item{RELJCT2}{This data element identifies the crash's location with respect
 #'     to presence in or proximity to components typically in junction or interchange
 #'     areas}
 #'   \item{TYP_INT}{This data element identifies and allows separation of various

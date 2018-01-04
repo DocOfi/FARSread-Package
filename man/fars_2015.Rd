@@ -14,7 +14,7 @@
     in the crash}
   \item{VE_FORMS}{This data element is a count of the number of vehicles in-
     transport involved in the crash}
-  \item{PVH_INVL}{Number of Parked orWorking Vehicles Involved}
+  \item{PVH_INVL}{Number of Parked or Working Vehicles Involved}
   \item{PEDS}{This element records the number of Persons Not a Motor
     Vehicle occupant}
   \item{PERNOTMVIT}{This data element is a count of the number of non-motorists
@@ -59,9 +59,9 @@
   \item{MAN_COLL}{This data element describes the orientation of two motor vehicles
     in-transport when they are involved in the First Harmful Event of a collision
     crash}
-  \item{REL_JCT1}{This data element identifies the crash's location with respect
+  \item{RELJCT1}{This data element identifies the crash's location with respect
     to presence in an interchange area}
-  \item{REL_JCT2}{This data element identifies the crash's location with respect
+  \item{RELJCT2}{This data element identifies the crash's location with respect
     to presence in or proximity to components typically in junction or interchange
     areas}
   \item{TYP_INT}{This data element identifies and allows separation of various
@@ -123,5 +123,9 @@ fars_2015
 \description{
 FARS contains data derived from the census of fatal motor vehicle traffic crashes
 within the 50 States, the District of Columbia, and Puerto Rico for the year 2015
+}
+\examples{
+\dontrun{head(fars_2015)}
+
 }
 \keyword{datasets}

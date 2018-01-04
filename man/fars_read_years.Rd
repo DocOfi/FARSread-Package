@@ -23,7 +23,7 @@ A list of data frames for each year that was requested. The data frame
 }
 \details{
 If you have a file from FARS that is in .csv format but not in .csv.bz2
-  format, you can convert it to .csv.bz2 format by using the write.csv function.
+  format, you can convert it to .csv.bz2 format by using the write.csv function
   in R.
 }
 \seealso{

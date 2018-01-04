@@ -10,7 +10,7 @@ make_filename(year)
 \item{year}{A numerical vector for the year to include in the file name.}
 }
 \value{
-A character vector indicating the name of the file.
+A character vector indicating the name of the file in .csv.bz2 format
 }
 \description{
 \code{make_filename} is a wrapper for the function sprintf that returns a character
