@@ -4,7 +4,7 @@
 #'   crashes within the 50 States, the District of Columbia, and Puerto Rico for the
 #'   year 2015
 #'
-#' @format A data frame with 32166 rows and 52 columns:
+#' @format A data frame with 32166 rows and 52 variables:
 #' \describe{
 #'   \item{STATE}{State number corresponding to a State in the USA}
 #'   \item{ST_CASE}{This element identifies the unique case number assigned by the
@@ -47,7 +47,7 @@
 #'     where the crash}
 #'   \item{LATITUDE}{This element identifies the location of the crash using Global
 #'     Position coordinates. This is the position of latitude}
-#'   \item{LONGITUDE}{This element identifies the location of the crash using Global
+#'   \item{LONGITUD}{This element identifies the location of the crash using Global
 #'     Position coordinates. This is the position of longitude}
 #'   \item{SP_JUR}{This data element identifies if the location on the trafficway
 #'     where the crash occurred qualifies as a Special Jurisdiction even though it
@@ -100,7 +100,7 @@
 #'   \item{HOSP_HR}{This data element records the hour that emergency medical
 #'     service arrived at the treatment facility to which it was transporting
 #'     victims of the crash}
-#'   \item{HOSP_MIN}{This data element records the minutes after the hour that
+#'   \item{HOSP_MN}{This data element records the minutes after the hour that
 #'     emergency medical service arrived at the treatment facility to which it was
 #'     transporting victims of the crash}
 #'   \item{CF1}{This data element records factors related to the crash expressed
