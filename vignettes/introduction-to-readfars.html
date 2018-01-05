@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Edmund julian L Ofilada" />
+
+<meta name="date" content="2018-01-04" />
+
+<title>Introduction to FARSread</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to FARSread</h1>
+<h4 class="author"><em>Edmund julian L Ofilada</em></h4>
+<h4 class="date"><em>2018-01-04</em></h4>
+
+
+
+<div id="package-farsread" class="section level2">
+<h2>Package FARSread</h2>
+<p>Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a>. This document hopes to familiarize the reader with the fars_read function from the package FARSread and the variables contained in a FARS data file.</p>
+<div id="data-fars2015" class="section level3">
+<h3>Data: fars2015</h3>
+<p>Fatality Analysis Reporting System or FARS contains data derived from a census of fatal motor vehicle traffic crashes within the 50 States, the District of Columbia, and Puerto Rico. FARS data is available for every year since FARS was established in 1975.</p>
+<p>Interested parties may access data tables at <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a>, download files via FTP at <a href="ftp://ftp.nhtsa.dot.gov/fars/" class="uri">ftp://ftp.nhtsa.dot.gov/fars/</a>, or make requests through the <a href="www-nrd.nhtsa.dot.gov/Cats/Index.aspx">Publications and Data Requests page</a>. Information requests can also be made by phone at 800-934-8517, or by e-mail at <a href="mailto:ncsaweb@dot.gov">ncsaweb@dot.gov</a></p>
+<p>To download a copy of the 2015 FARS data, first go to this NHTSA website <a href="https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars" class="uri">https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars</a>. Click on the the link <a href="ftp://ftp.nhtsa.dot.gov/fars/">Download Raw Data from FTP Site</a> which will bring you to another page with the title <strong>Index of /fars/</strong>. Click on the year <a href="ftp://ftp.nhtsa.dot.gov/fars/2015/">2015</a> which will bring you to the <strong>Index of /fars/2015/</strong> page. Click on the link <a href="ftp://ftp.nhtsa.dot.gov/fars/2015/National/">National</a> which contains the zip file for the FARS national data for the year 2015. This will bring you another page <strong>Index of /fars/2015/National/</strong> where you can choose the file format you want to download. The FARS 2015 National data is available in .csv, .sas, and .dbf format. Choose the <a href="ftp://ftp.nhtsa.dot.gov/fars/2015/National/FARS2015NationalCSV.zip">FARS2015NationalCSV.zip</a> which will start the download process from the ftp site. After the download has completed, unzip the file using a local software in your computer such as <code>WinRAR</code> in Windows or the unzip function in R. The .csv file should have the file name <code>accident.csv</code>. <strong>WARNING!!!</strong> If you are downloading .csv files for different years, it will be a good idea to download the zip files to different directories or folders. The files in each zip files have similar names which can result in confusion or files being overwritten.</p>
+<p>For example the .csv file we are interested in is the <code>accident.csv</code> file. The same file name exists in the 2016 zip file , the 2015 zip file, the 2014 zip file as well as other zip files for different years. After unzipping the files, it’s a good idea to change the name of the file to reflect the year the data was derived from. Changing <code>accident.csv</code> to <code>accident_2015.csv</code> can save some frustrations later on and also because you cannot keep a file with same file name in a single directory.</p>
+<p>You can rename a file in R Studio. Go to the lower right pane in R Studio and select the square slot next to the file you want to change the name. A check mark will appear in the square slot. Click on this and click rename. Enter the new name for the file.</p>
+</div>
+<div id="downloading-the-file-in-r" class="section level3">
+<h3>Downloading the file in R</h3>
+<p>If you know the URL for the file you want to download, you can download the file inside R itself. One of the great things about R is its versatility. It can be adapted to different demands of the workspace by utilizing the different packages that has been developed for it.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+fileurl2015 &lt;-<span class="st"> &quot;ftp://ftp.nhtsa.dot.gov/fars/2015/National/FARS2015NationalCSV.zip&quot;</span> ### URL of the file we want to download
+
+<span class="kw">download.file</span>(fileurl2015,<span class="dt">destfile=</span><span class="st">&quot;FARS2014NationalCSV.zip&quot;</span>) ###downloading the .zip file
+
+dateDownloaded2015 &lt;-<span class="st"> </span><span class="kw">date</span>() ### recording the date and time of our download
+dateDownloaded2015
+
+file2015 &lt;-<span class="st"> &quot;FARS2014NationalCSV.zip&quot;</span> ### Assign file name to an R object
+<span class="kw">unzip</span>(file2015) ### unzip the file
+
+<span class="kw">list.files</span>() ### show all the content of the zip file</code></pre></div>
+<p>Once you have unzipped the file, look for the file <code>accident.csv</code> and rename it to <code>accident_2015</code>.</p>
+</div>
+<div id="reading-the-data-in-r-the-fars_read-function" class="section level3">
+<h3>Reading the data in R: The fars_read function</h3>
+<p>The fars_read() is the function we use to read the fars data in R. We use the file name as an argument to the function and save it as an R object with the name <code>&quot;accident_2015&quot;</code> like so:</p>
+<pre><code>accident_2015 &lt;- fars_read(&quot;accident_2015.csv&quot;)
+</code></pre>
+<p>We are not limited as to what name to assign to the output. We can actually save the result to whatever name you like. You may find <code>acc_2015</code> or <code>fars_2015</code> easier to use as it is shorter than <code>accident_2015</code>. It contains less letters and therefore easier to type on the keyboard.</p>
+<p>For this tutorial we have downloaded the fars data for the year 2015 for you. We changed the file name from <code>accident.csv</code> to <code>accident_2015.csv</code> and read it in R. We will now use the function <code>fars_read</code> to read the file <code>accident_2015.csv</code> in your working directory and save the output in the R object <code>accident_2015</code>. My fingers needed more exercise. But before we can do all that, we’ll first need to load the package <code>FARSread</code> which contains the <code>fars_read</code> function among others.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FARSread)
+accident_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;accident_2015.csv&quot;</span>) ### Read the file accident_2015.csv and assign it to an R object named accident_2015</code></pre></div>
+<p>The data has 32166 rows and 52 columns.</p>
+</div>
+<div id="looking-at-the-variables-in-our-data" class="section level3">
+<h3>Looking at the variables in our data</h3>
+<p>Once the data is read in R, we can use all the functions available in R to analyze the data</p>
+<p>To see what variables are present in the data we can use the r function <code>glimpse</code> from the package <code>dplyr</code>. You can see the results below but first we have to load the dplyr package using the function <code>library</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr) ### load package dplyr to access the  function glimpse
+<span class="kw">glimpse</span>(accident_2015) ### view the variable names 
+<span class="co">#&gt; Observations: 32,166</span>
+<span class="co">#&gt; Variables: 52</span>
+<span class="co">#&gt; $ STATE      &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...</span>
+<span class="co">#&gt; $ ST_CASE    &lt;int&gt; 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10...</span>
+<span class="co">#&gt; $ VE_TOTAL   &lt;int&gt; 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 3, 1, 1, 1, 2, 1, ...</span>
+<span class="co">#&gt; $ VE_FORMS   &lt;int&gt; 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 3, 1, 1, 1, 2, 1, ...</span>
+<span class="co">#&gt; $ PVH_INVL   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ PEDS       &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ PERNOTMVIT &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ PERMVIT    &lt;int&gt; 1, 1, 2, 1, 2, 2, 2, 1, 1, 2, 2, 6, 1, 1, 1, 2, 1, ...</span>
+<span class="co">#&gt; $ PERSONS    &lt;int&gt; 1, 1, 2, 1, 2, 2, 2, 1, 1, 2, 2, 6, 1, 1, 1, 2, 1, ...</span>
+<span class="co">#&gt; $ COUNTY     &lt;int&gt; 127, 83, 11, 45, 45, 111, 89, 73, 117, 33, 83, 95, ...</span>
+<span class="co">#&gt; $ CITY       &lt;int&gt; 0, 0, 0, 0, 2050, 0, 1730, 350, 47, 0, 0, 1500, 0, ...</span>
+<span class="co">#&gt; $ DAY        &lt;int&gt; 1, 1, 1, 4, 7, 8, 8, 3, 13, 5, 7, 9, 10, 11, 11, 13...</span>
+<span class="co">#&gt; $ MONTH      &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...</span>
+<span class="co">#&gt; $ YEAR       &lt;int&gt; 2015, 2015, 2015, 2015, 2015, 2015, 2015, 2015, 201...</span>
+<span class="co">#&gt; $ DAY_WEEK   &lt;int&gt; 5, 5, 5, 1, 4, 5, 5, 7, 3, 2, 4, 6, 7, 1, 1, 3, 4, ...</span>
+<span class="co">#&gt; $ HOUR       &lt;int&gt; 2, 22, 1, 0, 7, 9, 18, 21, 8, 18, 20, 6, 10, 6, 8, ...</span>
+<span class="co">#&gt; $ MINUTE     &lt;int&gt; 40, 13, 25, 57, 9, 59, 33, 30, 0, 45, 55, 35, 55, 1...</span>
+<span class="co">#&gt; $ NHS        &lt;int&gt; 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ RUR_URB    &lt;int&gt; 1, 1, 1, 1, 2, 1, 2, 2, 2, 1, 2, 2, 1, 1, 1, 2, 2, ...</span>
+<span class="co">#&gt; $ FUNC_SYS   &lt;int&gt; 3, 1, 3, 4, 3, 5, 3, 5, 3, 4, 3, 3, 5, 4, 3, 4, 5, ...</span>
+<span class="co">#&gt; $ RD_OWNER   &lt;int&gt; 1, 1, 1, 1, 1, 2, 1, 4, 1, 1, 1, 1, 2, 1, 2, 1, 2, ...</span>
+<span class="co">#&gt; $ ROUTE      &lt;int&gt; 3, 1, 2, 3, 2, 4, 2, 6, 2, 3, 3, 2, 4, 2, 4, 3, 4, ...</span>
+<span class="co">#&gt; $ TWAY_ID    &lt;chr&gt; &quot;SR-5&quot;, &quot;I-65&quot;, &quot;US-SR 6&quot;, &quot;SR-27&quot;, &quot;US-SR 53&quot;, &quot;CR...</span>
+<span class="co">#&gt; $ TWAY_ID2   &lt;chr&gt; NA, NA, NA, NA, &quot;HINTON WATERS AVE&quot;, NA, NA, NA, NA...</span>
+<span class="co">#&gt; $ MILEPT     &lt;int&gt; 1754, 3604, 1958, 566, 308, 0, 1030, 0, 2520, 34, 8...</span>
+<span class="co">#&gt; $ LATITUDE   &lt;dbl&gt; 33.87865, 34.91044, 32.14201, 31.43981, 31.31933, 3...</span>
+<span class="co">#&gt; $ LONGITUD   &lt;dbl&gt; -87.32533, -86.90871, -85.75846, -85.51030, -85.515...</span>
+<span class="co">#&gt; $ SP_JUR     &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ HARM_EV    &lt;int&gt; 35, 34, 42, 53, 12, 1, 43, 8, 23, 12, 12, 12, 1, 1,...</span>
+<span class="co">#&gt; $ MAN_COLL   &lt;int&gt; 0, 0, 0, 0, 6, 0, 0, 0, 0, 2, 7, 6, 0, 0, 0, 6, 0, ...</span>
+<span class="co">#&gt; $ RELJCT1    &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ RELJCT2    &lt;int&gt; 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 1, ...</span>
+<span class="co">#&gt; $ TYP_INT    &lt;int&gt; 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...</span>
+<span class="co">#&gt; $ WRK_ZONE   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ REL_ROAD   &lt;int&gt; 4, 3, 4, 4, 1, 4, 4, 1, 4, 1, 1, 1, 1, 4, 4, 1, 4, ...</span>
+<span class="co">#&gt; $ LGT_COND   &lt;int&gt; 2, 2, 2, 2, 1, 1, 3, 2, 1, 2, 2, 1, 1, 1, 1, 3, 1, ...</span>
+<span class="co">#&gt; $ WEATHER1   &lt;int&gt; 1, 10, 1, 10, 1, 1, 1, 2, 10, 1, 1, 1, 1, 10, 1, 10...</span>
+<span class="co">#&gt; $ WEATHER2   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ WEATHER    &lt;int&gt; 1, 10, 1, 10, 1, 1, 1, 2, 10, 1, 1, 1, 1, 10, 1, 10...</span>
+<span class="co">#&gt; $ SCH_BUS    &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ RAIL       &lt;chr&gt; &quot;0000000&quot;, &quot;0000000&quot;, &quot;0000000&quot;, &quot;0000000&quot;, &quot;000000...</span>
+<span class="co">#&gt; $ NOT_HOUR   &lt;int&gt; 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 88,...</span>
+<span class="co">#&gt; $ NOT_MIN    &lt;int&gt; 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 88,...</span>
+<span class="co">#&gt; $ ARR_HOUR   &lt;int&gt; 2, 22, 1, 1, 7, 10, 18, 21, 8, 19, 21, 6, 88, 6, 8,...</span>
+<span class="co">#&gt; $ ARR_MIN    &lt;int&gt; 58, 20, 45, 15, 16, 17, 38, 48, 3, 1, 20, 41, 88, 2...</span>
+<span class="co">#&gt; $ HOSP_HR    &lt;int&gt; 88, 88, 99, 88, 88, 99, 99, 99, 88, 99, 88, 99, 88,...</span>
+<span class="co">#&gt; $ HOSP_MN    &lt;int&gt; 88, 88, 99, 88, 88, 99, 99, 99, 88, 99, 88, 99, 88,...</span>
+<span class="co">#&gt; $ CF1        &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ CF2        &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ CF3        &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ FATALS     &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...</span>
+<span class="co">#&gt; $ DRUNK_DR   &lt;int&gt; 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, ...</span></code></pre></div>
+<p>From the output we can see:</p>
+<ul>
+<li><p>The variable <code>STATE</code> codes the various States into integers from 1 to 56. The state of Alaska is represented by the integer 2.</p></li>
+<li><p>The variable <code>MONTH</code> codes the months into integers from 1 to 12. The month of Decemeber is coded as, you guessed it 12.</p></li>
+<li><p>The variable <code>PEDS</code> counts the number of persons who were not a motor Vehicle occupant.</p></li>
+<li><p>The variable <code>PERNOTMVIT</code> counts the number of non-motorists in the crash.</p></li>
+<li><p>The variable <code>VE_TOTAL</code> counts all the vehicles in the crash.</p></li>
+<li><p>The variable <code>FATALS</code> counts the number of fatally injured persons in the crash.</p></li>
+<li><p>The variable <code>DRUNK_DR</code> counts the number of drinking drivers involved in the crash.</p></li>
+</ul>
+<p>If these are the variables we are interested in, we can select these among the many variables in the data and see a summary.</p>
+</div>
+<div id="exploring-fars" class="section level3">
+<h3>Exploring FARS</h3>
+<p>If we wanted to see the first 6 rows of data we can do the following:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">accident_2015 %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">select</span>(STATE, MONTH, PEDS, PERNOTMVIT, VE_TOTAL, FATALS, DRUNK_DR) %&gt;%<span class="st"> </span>###select variables
+<span class="st">        </span><span class="kw">as.data.frame</span>() %&gt;%<span class="st"> </span>###  save results as a data frame
+<span class="st">        </span><span class="kw">head</span>() ### print first 6 rows of data
+<span class="co">#&gt;   STATE MONTH PEDS PERNOTMVIT VE_TOTAL FATALS DRUNK_DR</span>
+<span class="co">#&gt; 1     1     1    0          0        1      1        1</span>
+<span class="co">#&gt; 2     1     1    0          0        1      1        0</span>
+<span class="co">#&gt; 3     1     1    0          0        1      1        1</span>
+<span class="co">#&gt; 4     1     1    0          0        1      1        1</span>
+<span class="co">#&gt; 5     1     1    0          0        2      1        0</span>
+<span class="co">#&gt; 6     1     1    0          0        1      1        0</span></code></pre></div>
+</div>
+<div id="creating-summaries-of-variables-of-interest" class="section level3">
+<h3>Creating summaries of variables of interest</h3>
+<p>We can create a summary of the variables we’re interested in</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">accident_2015 %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">select</span>(STATE, MONTH, PEDS, PERNOTMVIT, VE_TOTAL, FATALS, DRUNK_DR) %&gt;%<span class="st"> </span>### selects variables
+<span class="st">        </span><span class="kw">summary</span>() ### summarize data
+<span class="co">#&gt;      STATE          MONTH             PEDS           PERNOTMVIT     </span>
+<span class="co">#&gt;  Min.   : 1.0   Min.   : 1.000   Min.   : 0.0000   Min.   : 0.0000  </span>
+<span class="co">#&gt;  1st Qu.:12.0   1st Qu.: 4.000   1st Qu.: 0.0000   1st Qu.: 0.0000  </span>
+<span class="co">#&gt;  Median :28.0   Median : 7.000   Median : 0.0000   Median : 0.0000  </span>
+<span class="co">#&gt;  Mean   :27.6   Mean   : 6.791   Mean   : 0.2149   Mean   : 0.2237  </span>
+<span class="co">#&gt;  3rd Qu.:42.0   3rd Qu.:10.000   3rd Qu.: 0.0000   3rd Qu.: 0.0000  </span>
+<span class="co">#&gt;  Max.   :56.0   Max.   :12.000   Max.   :16.0000   Max.   :16.0000  </span>
+<span class="co">#&gt;     VE_TOTAL          FATALS          DRUNK_DR     </span>
+<span class="co">#&gt;  Min.   : 1.000   Min.   : 1.000   Min.   :0.0000  </span>
+<span class="co">#&gt;  1st Qu.: 1.000   1st Qu.: 1.000   1st Qu.:0.0000  </span>
+<span class="co">#&gt;  Median : 1.000   Median : 1.000   Median :0.0000  </span>
+<span class="co">#&gt;  Mean   : 1.556   Mean   : 1.091   Mean   :0.2832  </span>
+<span class="co">#&gt;  3rd Qu.: 2.000   3rd Qu.: 1.000   3rd Qu.:1.0000  </span>
+<span class="co">#&gt;  Max.   :58.000   Max.   :10.000   Max.   :3.0000</span></code></pre></div>
+</div>
+<div id="creating-tables" class="section level3">
+<h3>Creating tables</h3>
+<p>If we wanted to see the States with the highest number of recorded traffic accidents, we can:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">most_count &lt;-<span class="st"> </span>accident_2015 %&gt;%<span class="st"> </span>###fars data object in R
+<span class="st">        </span><span class="kw">group_by</span>(STATE) %&gt;%<span class="st"> </span>### groups the data according to State
+<span class="st">        </span><span class="kw">summarize</span>(<span class="dt">count =</span> <span class="kw">n</span>()) %&gt;%<span class="st"> </span>### count the number of observations per State 
+<span class="st">        </span><span class="kw">arrange</span>(<span class="kw">desc</span>(count)) ### arrange from highest to lowest
+        
+<span class="kw">head</span>(most_count, <span class="dv">15</span>)
+<span class="co">#&gt; # A tibble: 15 x 2</span>
+<span class="co">#&gt;    STATE count</span>
+<span class="co">#&gt;    &lt;int&gt; &lt;int&gt;</span>
+<span class="co">#&gt;  1    48  3124</span>
+<span class="co">#&gt;  2     6  2925</span>
+<span class="co">#&gt;  3    12  2699</span>
+<span class="co">#&gt;  4    13  1327</span>
+<span class="co">#&gt;  5    37  1275</span>
+<span class="co">#&gt;  6    42  1102</span>
+<span class="co">#&gt;  7    36  1046</span>
+<span class="co">#&gt;  8    39  1029</span>
+<span class="co">#&gt;  9    17   914</span>
+<span class="co">#&gt; 10    45   909</span>
+<span class="co">#&gt; 11    26   893</span>
+<span class="co">#&gt; 12    47   884</span>
+<span class="co">#&gt; 13     4   810</span>
+<span class="co">#&gt; 14    29   802</span>
+<span class="co">#&gt; 15     1   783</span></code></pre></div>
+<p>The table above shows that Texas (48) has the highest number of accidents followed by California (6) and Florida (12).</p>
+</div>
+<div id="plotting-the-results" class="section level3">
+<h3>Plotting the results</h3>
+<p>We can also plot these results for presentations using the <code>barplot()</code> function that comes with a standard installation of R, but first we’ll have to change the names of the States from the numbers that represent them to their true names.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_most_count &lt;-<span class="st"> </span>most_count %&gt;%<span class="st"> </span>### The table above we just created
+<span class="st">                        </span><span class="kw">slice</span>(<span class="dv">1</span>:<span class="dv">15</span>) %&gt;%<span class="st"> </span>### Get only top 15 States
+<span class="st">                        </span><span class="kw">mutate</span>(<span class="dt">STATE =</span> <span class="kw">c</span>(<span class="st">&quot;TX&quot;</span>, <span class="st">&quot;CA&quot;</span>, <span class="st">&quot;FL&quot;</span>, <span class="st">&quot;GA&quot;</span>, <span class="st">&quot;NC&quot;</span>, <span class="st">&quot;PA&quot;</span>, <span class="st">&quot;NY&quot;</span>, <span class="st">&quot;OH&quot;</span>,
+                               <span class="st">&quot;IL&quot;</span>, <span class="st">&quot;SD&quot;</span>, <span class="st">&quot;MI&quot;</span>, <span class="st">&quot;TN&quot;</span>, <span class="st">&quot;AR&quot;</span>, <span class="st">&quot;MS&quot;</span>, <span class="st">&quot;AL&quot;</span>)) %&gt;%<span class="st"> </span>### Change to State abbreviated Names
+<span class="st">                        </span><span class="kw">as.data.frame</span>() ### save as a data frame
+<span class="kw">barplot</span>(<span class="dt">height =</span> plot_most_count$count, ### variable for y-axis
+        <span class="dt">names.arg =</span> plot_most_count$STATE, ### variable for x-axis
+        <span class="dt">las =</span> <span class="dv">1</span>, ### orientation of labels on the x -axis
+        <span class="dt">cex.lab =</span> <span class="dv">1</span>, ### magnification for the size of the labels on the y and x-axis
+        <span class="dt">cex.names =</span> <span class="fl">0.8</span>, ### size of the text for the labels on the x and y-axis
+        <span class="dt">col =</span> <span class="kw">rainbow</span>(<span class="dv">20</span>), ### color for the bars of the plot
+        <span class="dt">ylab =</span> <span class="st">&quot;Number of Crashes&quot;</span>, ### label for the y-axis
+        <span class="dt">xlab =</span> <span class="st">&quot;States&quot;</span>) ### label for the x-axis
+<span class="kw">title</span>(<span class="st">&quot;Top 15 States</span><span class="ch">\n</span><span class="st"> With Highest </span><span class="ch">\n</span><span class="st"> Number of Traffic Accidents&quot;</span>, ###text for title
+      <span class="dt">line=</span>-<span class="dv">4</span>, ### position of the title
+      <span class="dt">cex.main =</span> <span class="fl">1.2</span>) ###size of the text</code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="fig. 1" />
+<p class="caption">fig. 1</p>
+</div>
+<p>If we wanted to find the peak months for traffic accidents in 2015 we can</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">most_months &lt;-<span class="st"> </span>accident_2015 %&gt;%<span class="st"> </span>### data that we read in R
+<span class="st">        </span><span class="kw">group_by</span>(MONTH) %&gt;%<span class="st"> </span>### groups the data according to month
+<span class="st">        </span><span class="kw">summarize</span>(<span class="dt">count =</span> <span class="kw">n</span>()) %&gt;%<span class="st"> </span>### find the total number of accidents per month
+<span class="st">        </span><span class="kw">mutate</span>(<span class="dt">mon_abb =</span> <span class="kw">as.factor</span>(month.abb)) %&gt;%<span class="st"> </span>### create a new variable of abbreviations for month names
+<span class="st">        </span><span class="kw">as.data.frame</span>() ### save result as a data frame
+most_months
+<span class="co">#&gt;    MONTH count mon_abb</span>
+<span class="co">#&gt; 1      1  2368     Jan</span>
+<span class="co">#&gt; 2      2  1968     Feb</span>
+<span class="co">#&gt; 3      3  2385     Mar</span>
+<span class="co">#&gt; 4      4  2430     Apr</span>
+<span class="co">#&gt; 5      5  2847     May</span>
+<span class="co">#&gt; 6      6  2765     Jun</span>
+<span class="co">#&gt; 7      7  2998     Jul</span>
+<span class="co">#&gt; 8      8  3016     Aug</span>
+<span class="co">#&gt; 9      9  2865     Sep</span>
+<span class="co">#&gt; 10    10  3019     Oct</span>
+<span class="co">#&gt; 11    11  2724     Nov</span>
+<span class="co">#&gt; 12    12  2781     Dec</span></code></pre></div>
+<p>It’s hard to see a trend or compare values looking at a table. We can better appreciate the results by plotting them and this time we’ll use the function <code>ggplot</code> from the package <code>ggplot2</code>. We’ll load this package again using the function<code>library</code>. We will also need the package forcats to rearrange the levels of the variable <code>mon.abb</code> so it will print the months in the correct order.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(forcats) ### load package forcats to change factor levels
+most_months$mon_abb &lt;-<span class="st"> </span><span class="kw">fct_relevel</span>(most_months$mon_abb, <span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>) ### change factor levels to correctly plot the data using ggplot
+
+<span class="kw">library</span>(ggplot2) ### load ggplot2 package for plotting data
+<span class="kw">ggplot</span>(<span class="dt">data =</span> most_months, <span class="kw">aes</span>(<span class="dt">x =</span> mon_abb, <span class="dt">y =</span> count, <span class="dt">group =</span> <span class="dv">1</span>)) +<span class="st"> </span>### select the data and variables we will plot
+<span class="st">        </span><span class="kw">geom_line</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) +<span class="st"> </span>### plot data as a line
+<span class="st">        </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">fill =</span> <span class="st">&quot;green&quot;</span>) +<span class="st"> </span>### plot data as green round points as well
+<span class="st">        </span><span class="kw">xlab</span>(<span class="st">&quot;Month&quot;</span>) +<span class="st"> </span>### add label to x-axis
+<span class="st">        </span><span class="kw">ggtitle</span>(<span class="st">&quot;Number of Accidents Recorded per Month in 2015&quot;</span>) ### add title</code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAGACAMAAABFpiBcAAABSlBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZmYAZrYA/wAzMzM6AAA6ADo6AGY6Ojo6OpA6ZmY6kJA6kNtNTU1NTW5NTY5Nbo5NbqtNjqtNjshmAABmADpmAGZmOgBmOpBmZgBmZmZmZrZmkJBmtrZmtttmtv9uTU1uTW5uTY5ubo5ubqtujqtujshuq6tuq+SOTU2OTW6OTY6Obk2Obm6ObquOjm6Ojo6OjsiOyP+QOgCQOjqQOmaQkDqQkGaQtpCQ2/+rbk2rbm6rbo6rjk2rjqurq26rq46ryKur5Mir5P+2ZgC2Zjq2tma225C22/+2/7a2/9u2///Ijk3Ijm7IyI7I5KvI/+TI///bkDrbtmbb/7bb/9vb///kq27kq47k5Kvk/8jk/+Tk///r6+v/AAD/tmb/yI7/25D/27b/5Kv//7b//8j//9v//+T///9iXUgmAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAawUlEQVR4nO2d/X/cyF3H90yDfe7B4U1qYmgpLXZCKHbSh2MDXOM7oD2bQptti7fXGKiza7N2Vv//r8yTHndWMyPNSN/Rfj6vu2hX0lefmdFb8yRZO0ogiLBGfScAguoEQCHSAqAQaQFQiLQAKERaABQiLQAKkRYAhUirJaCz0YFY3h8dbNzn/mjX9nCXo9Gjd+rzYnSs3+nD63SfD683HPnuk7frKZXaWdtSI53BRtOqLkcfvVERo5p05tlRO5e+qv32WcpFcdwfFbJwuauMuDafgKjVGlB5EvwAumDlnO67+axaADpbxzAF1InQloAqaBheNem0AHQxShEUpKZZmMnDspICoJs0U1WeL0DzSvNu/09UBbRZToCqVZcuZ7IdoDt/JVmb/fGmEtAAqk0FL4kF51KkXmXhUl3Nd/sbmppBqC2gO/8sSosDKkuan7+7/YMFv6QXAl8G6CK96tMWiu2VVr75ysti/Tbb+Y99iRILlnuqD9KHH/JXgpX8mI9+J2oSUaWoxXGe0rfK7CAptpTZ0atJWzcomsojbQzmutz5hfj04fX3j2rSyb5+fZRXgDx32R5Sd7IgLnfe3h/JIhalOpKHTRbGCzlmtQb0V+LyrgL6KWuKPvrpvmiy74/+iH+QtcBIfvrwmq1TNUe2sggoo/rDa/FlprZmH4SP+PKNb++WjilbwuP0xMtvWUoLNWgWkx+9mjSNQcFUJvHT2nxd7vxSXAx3n/zyqDad3/h2IaES0FEp7VKXj94pVHle7v86bZpmO78YjQYLaWtA397ti+u5DCgrW1GH8o3sWj+QHSZW8Me8QhCf8iqDr5zx01po4hfiCMeqfVuI+ib7wI8pz3TlmLuqY8bPoDiZefei2ActxmQHTVMhk6YzyNcJsXzt1uSL13hiFDPb5akoGRTTyb6KrO+mxVHaIxcvYtWaz9JqW+xwqaN5MGoPqBjJVwHd5cXHvkqYRJVyyVlOKwBVO3KJndlmQUpaymK7OAEqpvCBH1N+4aHVY4ogCWjpBKeA7uaHmmUpKqZCHkZnkK8TMuSLb1gIAI95mqoGWToLX9PcVVap9btZJ70EqOyhmnuykcoDoLyE1vqgafFdckDl6fvojRqNjvhJyspT1QqLEqBytMobrmwIkH3gsXJP7lU9pjiRs7RLm89aiVUL+T2PqR59kR5GZ5CvE0pb2A35kn3GYz6VJAEtG2TpLHxNc1dZJVcf5Kks16AqfwNt5D0Aytvxrz0Dqpqt0UELQCXlaY0mV0lCOwOUz1TOdpP2gKroQh80AaA2mqlxzJ9xCC/ThqkKqGyJeFOYN+EFQNebeNV63h+VGuG1Jr5w4rNjFgAVh00PqVZdytnEvKbWNPH8MDqDfF0hkRvzJYpjwQaRx0m1iXcGNB2oF0bxWUrK0A5OXgDlo84DCYPo31cBzQdJsrvE+2rZidQNktIPMz7UZTH8xBQ+iGMep2OY8jHliVdDn0LFktU6qlOSxmQHzccw/DA6g3xdIg9Vmy8B6N3+9z6RnemqQZZOC0DziaTiPGiSX/lOt+vikhdAeWOaTt7wWZgqoJ+mbW12S6R4IvNpnJTLbKjBq51FOkZNP4jYzKt6THni82mm1CetYcTYOL81Uzl6BozOoLCOS02fbczXpRyi76qiqBgU0mkClE+gqvmH0p0kBWVefkOUH0DVPXl+X+n3uj5oNlGf3lQuDTr5StVDPFYr0rka2fCrOZRFMZYFqTnz8jHFaWWnVM0m7lZTmk4JVQ6apyJN2rpBcV2SqBsQ2c5r+RI9nhlfm7bFRYMsnb83App2cWVNWZorLpffEIWnmRprsK0qKQHQxgKgXQiANhYA7UIAtLEAaBcCoBBpAVCItAAoRFoAFCItAAqRFgCFSAuAQqTVDtD3darf6iUCFoO1AKCwIG0BQGFB2gKAwoK0BQCFBWkLAAoL0hYAFBakLQAoLEhbANB4Lfbm8734LQDoQC3mjB3GzzxuC2MEAI3UgqEj5YQPNQtzBACN1AKAAlDKFns5PS6dRGIWFhEAlIqF23gkg8etfnNJUwcWFhEAlIaF63gEgALQLi3quntzpdJKNPEF3Y7HT66S5OFsfHhTXQBQLxE6QOcVbYoIVr3FMkhaPr9Krp8mq/PJ+gKAeonQVlbWgDrwM0hAFaQPr67WFwDUS4S2u1cPaNZr1W3zkaaihUtQP4CyynL54iZ5eHlRXrBNHzPVB0MmFQHNVyptjOLj/sS0Uztxi4CHd1AtoMuTxxfJ7aFAsrxQO3R5SQ3RouF4RFg41aFNcuFYhfZTg65VnXkNCkA9RDTr7ikLB0Ib5cKN0J6mmaYT9EEDRrQC9L1nQEuHigBQ1Zqvzk/l8L24AKB+IuaNHhzKLLw28eWDpb0I5zTZq3UNej0esz4o5kHDRQg+3R+9zC1s+bFIU6U6TtZXtbZwibBt4uvVZYoHaKEAIJGLaoc2SVcGSxMApW4xJwTo2oArH4eFShMAJW6RMdF/LjRTVoWJgkBpAqDELbKT33sudFOqhYmCQGkCoLQtcib6zoV2yr8wURBwqrVmIwDt16LARM+50M/354CGShMApWwxJwPohvtRfRcUAO3XokhFr7nYdL+074ICoD1bFKjwaLGpQa4J2NDJ7LugAGjfFjkV/iw2jmjqa1C3CMc0NYwAoAO02Px4U20f1E+iACgsjBH+GuzeCwqADtLC25Cn94ICoMO08DVp1HtBAdCBWmhvC0WXCwA6XIvaG5d+LPwEANAttah59MOXhZcAALq1FpsenvNo4SEAgG6vxYbHj+U2PxbtAwDoFltsBrTF03P1oQAUFg4Rm5p460fk1y0MkQA0fgtfdxVtIvSDpM03Qy0s6kMBaPQW3p7LaJwLez43Abo5GIDGbtH7jXL9HL6DBQANHtCjRaNHjdwsNkm+G8KJT71FXTwAjduiho7AuZgXXyja7j0MADR0QG8WdXSEzUXxlcyt3wVWcwySgEK2Enz241wAtP3BOs8GatBatXqzV0G1rWvQXLR5R65GnbUDANRC81bvRiwfqLvxb8W62a8e1c5FtE2TTQQANavd22WLBxoYoF3MRQBQs3wBaho+x9TEd3a7AYAa5evUGqd34rjM8gN2crsBgBrlq3E0Tj9GB2jrNFlEAFCjvPXeTMOsWIZ6ngMAaMsIf703AxvRTJb5DQCgbSO8N46+ArbBAoCaBUB7tACgFoqz9zYMCwBqoZY/YhQsYBssAKhZ8smI9ZUeLZoFbIMFADVLB6jFQ5XEchGpBQA1SqKoBdTvncvYCyqIBQA1SgfovCBviYq9oIJYAFCTFIS6+0L1jJLKRbQWANSkTYAaESWVi2gtAKhBKX76AADaOsAwgwdADaoH1PhXxO3/Ps1rRBiLUgG4WRjvgQDQemX41QTUAGqci2qSphYRQSzmzQE130UGoCaZAd1sYTFb2ihNjSOC1aANf+0JgPZmsSfuj25FDVp+FNvFwuJJRgAaJGCev8UjlEWjiEAWTQG1eBYcgIYIKLwkIZRFs4hQFgVCAWgEFs2eIKWWC4eIJoDyVgZNfC8WDf9IhFgunCJyQt0m8DBI6sOi4Z/ZEcuFU0Te3Qag9C22END37oCKCTwvE/XLk/F4klyPueTyyVXycDY+vAGgWm1hE58T2v2tzoeXF8ny2QX/eMuYnE74p9U5Q/UpANVr6wZJ7833hBtaWAB6yzkUWHJUV18IVB9eXSXL51cAVKttBPR9HaC1E8JtAU1r0URUmaxp5w398sWNWvkxU33wFirtWvWdjk4112c4feCr3cHrAV2dnyaKUt7Ys1qUN/YSUK7aKyvyiqFhQIO/AyWYC6cIXklWsl18ZLbZnx5YAfpwxvkUPVCp6SSvQQEoLFKVxuTzqhpZ2AC6PJlILE/TNdMJ+qCwWFO5620Fp9HCAtCUTzk84tXo6ssr3ugPexQf/S+td2+xAdBWFhaAphOgqkVnXx9fJMOfB60UbaS56NKiOv1r+yyXj1G8Qc39/UQEsKhe+3HmolML36/BlxsBqF4A1DkCgHZosdZ5ijIX3Vp4/50GsRGAagVAG0SEeJEqANVqffQZYy66tgCgnVkA0EYRxofn3C0AqE6a6bsIc9GHhfc3/QJQnQAoGQsAqpHu/kd8uRiGBQDVCIDSsQCg69LeQI4uFwOxAKDrAqCELADomvRP4MSWi6FYAFCNACgdCwAKC9IWABQWpC0AKCxIWwBQWJC2AKCwIG0BQGFB2gKAwoK0BQCFBWkLAAoL0hYAFBakLQAoLEhbAFBYkLYAoLAgbeEHUAgKLNSg7+t/OzueXAzLAoAW1Pgtq34iYKHbCEAzNX8NsJ8IWOg2AtBMAJSgBQDNVP824FhyMTQLAJoJgFK0AKCpDK9TjyQXg7MAoKkAKEkLAKpk+j2KOHIxPAsAqgRAaVoAUKl2vzblJwIWuo0AVAiAErUAoELmX0SLIRdDtACgQgCUqgUA5bL4SckIcjFICwAqBUCJWugAvT865ovFztvtARQWRC0AKCxIW6wDOhul2rXlE4DCIpRFTQ3qoC5TDIutstAB6q4uUwyLrbLQAnq3L5p49EFh0buFDtAPr+17nwAUFkEtdICiDwoLMhb6GhSAwoKIhQ5QlxlQAAqLoBY6QO+PRhgkwYKGhbYGdVaXKYbFVlkAUFiQttABiiYeFmQsNteg93/xRn1anozHkyS5Ho/HT66Sh7Px4U2SLiIH1PSQnQeLgAHbYLEZ0GTx6J1YPry8SJbPLpLphH9bnU+S66fpIn5AbRGlnIshW9QBqpr4W87hdLL64kLg+uoqWT6/UovIAbV4kr6tRciAbbCoAfRS1aCqFmVtOm/ply9u+De1YJs+ZloPjkMC0L4TAdlIM0j66E22ZnV+Klp5VoveHgoy1UJt7/KS8mjhUIESzsWwLXSArunh7FR9mk7WalAA6isCFrqNFoAuTybpx+lkSH1QBz4J52LYFnpAxZ99HJT55I366ssr3tqLUfxp9KN4lwqUbi4GbqEFdMbH7/dHilA+/8mHR2z5+CIZ0DwoAI3AQgfolvxVpxOfZHMxdAsAGtIicMA2WOgArTTxQwY0sEXggG2w0AJaHiQNFFC3CpRqLgZvoQfUVV2m2JcFAI3CYmsBdeSTaC6Gb6EF9MPrA7e/Pe4yxT4C9ubzPfML7VpZ9H9qh2GhBfRyN3H76/guU9w+gJG5t+eGJ8FcbImFDtCBTzMxOqWcCKWWi22xAKAhLJpFwEK3UQPosOdB93JA90KmqfdTOwwLLaDJYsDzoBmfblUosVxsjYUeUFd1meK2AQA0KostAlRNfKKJj8piSwCdK4nPGCRFZLEFgM6Leg9A47IYOKDzqtRKTNTHYrFNgOarxa3OwGnq/dQOw2IIgNbgpoGzYaLiO7XDsIgf0PoGe9MzS32XOywsI6IHtNmQp/dyh4VlxIAADfsnRvGd2mFYxA5ocdodgA7QIjigDQbMLnks3rgM+mfu8Z3aYVgEBrTRlCMAhUW+MSig4UcwDe+s917usLCMiB1QjOIHbuEH0A0qVm8hjs+VW4RygCgoSA3a8NFLnxP1XiwaBcDCS8QQAA08UdAwABZeIoIC2sUIRr5m3uXozhbNAmDhJSIooN2MYADokC0GAGiTAFjEYhEW0GwEA0Bh0SwiMKDyVicAhUXTiOCAvnd/kVzvhQILOhYAFBakLboA1PVdsb0XCizoWABQWJC26ATQ4K/bjq/cYWEZAUBhQdqiG0BD/yZRfOUOC8sIAAoL0hYdAer2q1l9Fwos6Fh0B6ivFHsJgEUsFl0B6i/FsNgqi3gBLdbJ8ZU7LCwjYgY0RzS+coeFZUS0gM4B6FZYANBQAbDwEhEroOWJ1fjKHRaWEQA0VAAsvETEDGhgi5YBsPASESmgcwC6JRYANFQALLxExAlo9dmT+ModFpYRADRUACy8RNgAujwZjyfZ4no8Hj+5Sh7Oxoc3fQIa2KJ1ACy8RFgA+vDyIlk+u1CLZDrhK1fnk+T6aU+Arj1dGl+5w8IywgLQW87hdKIWqy8uBLWvrpLl8yt3QG2eCwWgsMg2WjTxqhaVC9a085Z++eJGrfyYqT64IPkuupbychAoLtUDujo/TRe8lWe16O1hCiiX/QVi9bcfNn1QtwB3i9YBsPASYQXow9lpYZHwlj6vQfsAtHUALGKxsAF0eTIpLCSgbfqgRkL7LhRY0LGwALTMJ2/bV19e8da+0SgegMLCJcICUD7xycZFasG/Pr5Ims+DWhDad6HAgo6FTRNvlos/AIWFQ0T3gFoQ2nehwIKOBQCFBWmLHgA1E9p3ocCCjgUAhQVpiz4ANRLad6HAgo4FAIUFaYteADW9667vQoEFHYu+AG2eYi8BsIjFoh9A26QYFltlERWgGyve+ModFpYRkQG6AdH4yh0WlhExAbp58B9fucPCMgKAhgqAhZeIiACtmT2Nr9xhYRkBQEMFwMJLRDyA1t1+iq/cYWEZAUBDBcDCS0Q0gNbev4+v3GFhGQFAQwXAwktELIDWPwAVX7nDwjICgIYKgIWXiEgANTxBGl+5w8IyomdA9dgBUFhkG/sEdBN2axHeH8HvvdxhYRnRK6CbwNP3QZtZ+IqART8WsQBar/jKHRaWEf0CuoHQvgsFFnQs/ADaWHhZMmSnvqaZtFVo31ctLOhYAFBYkLboG1AtoX0XCizoWABQWJC26B1QHaF9Fwos6FgAUFiQtugfUA2hfRcKLOhYAFBYkLYgAOj6C0P6LhRY0LGgAahrhLNF+whY9GNBAdD2EbAYrAV1QC1+vLutRaAAWHiJoA+oDaLxlTssLCOIA2r148gxljssLCMAaKgAWHiJoA2oJZ8RljssLCMAaKgAWHiJIA2oLZ8RljssLCMAaKgAWHiJoAyoNZ8RljssLCMAaKgAWHiJIAyoPZ8RljssLCMAaKgAWHiJoAuoA58RljssLCNIAZoSCUBhkW0kBOi8CKgLnxGWOywsIygBmhGa9UFtA+Mrd1hYRhAG1EHxlTssLCNIAZoS2nehwIKOhQ2gy5PxeJIkD2fjw5vqAoDCIqiFBaAPLy+S5bOL1fkkuX6alBeeAVWE9l0osKBjYQHoLedwOnl4dZUsn1+VFwAUFmEtbJp4WYsuX9ysL9imj5nqg12EF9pCWtUDujo/TW4PBZLlhdru75ISVWjfVy0s6FhYAfpwdsqGShtqUL+AMkL32H9OITGWOywsI2wAXZ5MOKVd9EFFFbq35zBH38CiUQQs+rGwAFTyKZp5MXwvLvw38XtKToTGV+6wsIywAPR6zDXpYh4UgMKiutGiiTfLW4r3ckBd+qHxlTssLCOIAZrx6VaFxlfusLCMAKCwIG1BDFA08bCobKQFKAZJsKhsBKCwoGxBDVBM1MOivJEaoLwfiludsMg20gO0/0KBBR0LAAoL0hYAFBakLQAoLEhbAFBYkLYAoLAgbQFAYUHaAoDCgrSFH0Br5f43n84RsBi8BQCFBWkLAAoL0hYAFBakLQICCkHtBUAh0gKgEGkBUIi0AChEWiEAzd/dZLX3CX+ByWn6dTqxiBBvLn3i4lJ445lVmho4OOa7EmIT7JSHRLwFZuyYB/lCmewcmFIlX4/kknF5us0nORUBQMt72wD67O9ukocfueFw+9mpQ5qaOIQH1CkPnE9Wltf5i4qsxPcXbzW0StXyhF8AToDyfUXK7BQKUPl+++WLfzFeLWnu2OXOMzv9zCLiJxfJ8rPc5W9/aKwnVl989WNW8q/+bfz4whxQdZhOxFsoDWI5EVlnC4t8V0PMJ1nmQe3Py+tbP6qtUSULrNaVRasyXy/+9sIkPf7jr84MNfDy+W+eZrs/ueKFtPrCnCj5Tk95cO5TExEIUPF+e1bqJ/IFuIa9xXIqX5s3PbwxXrbPfzNJ/vvnBReLWvfFzZS/B+3w5vaJOaDqcMuycWr2yGmzyHc1xAyozEMKKCuv23reVucqCbJoVebrPWSqV+cT/mMEt4f/YzwVVypJPDmHf2BwGq5kmU9ertPT9EcP6ooqYBPPLsa0MGv35p2Sp/JKZ5cvb+INzfzy+W9/sPrytyUXk65P+Tv3edPCrnBjQNXh4cc3vzZ3/8q0WbV7ToDKPKj9eVkZKiuG25jXTqpoVeYNEfLVmtOJqunMgLKyUclhPiyJ7D9DRMIbgwuVKpNDMECnvH9uBajCgHXoeWlyEIyA/te//u8/lF0MWp2P+Z5ilJEWvoODbFxNCgyoykPWizC2ptLh2YUqWpX5+t0loKxakxWhzcm7PlXJ55f+iz8Y0pTVoCpVpq5TqCb+bGJ7ovL6VnxlJchrfUPEr392WnYxJYkXw3TCz5FdDVp2SK5thieBAVV5sK9BJWzyd1oS2awakc76oNY1KDvmz7MalH02ACePyBp1laqua1BeCreyG8muXQdAZSfmJpk+tYlgva/03D4z88ZaR4787dOHs6dp6pwcxP+1Uvnmi2u7lkMTYpcHub9FH1SMlVVvjxvJzJtc+HCKjeJ5LcF6OjYnTwzl1em7zicMayJEymSE9Nns4r0Gld0ePpv2rR9OXABVozk2ijcNNSU4omLLXOq1+lK2K1+9/IkYxVsAWnJQB6hTnu+/t+t7a0Ks8nAh9+fl9eeG+pC3otxBFu2DzLxJt2qaUgStzk2jeL5ZQi3G5MYrOZ8HVSe8h1E8XbnOdGda/sBvQvzIqheRqXHmexUAtdG1Rc3TsfiQyS1VABSCvAuAQqQFQCHSAqAQaQFQiLQAKERaADSI7vZ33rLF/dGjd2vb/u8/k7tvvuk+TXEKgAbR3f5Hb8RiHVAOJwC1FgANorv97x6wxey7ALSlAGgQ3e1//zvvkg//+DkD9MPr0WiXg/nT/dHo+I79c3D3zc9H7HPfqYxBADSI7vb/5p/eJnd/+rtH7z683k34/6K5n+28FTWo+tx3MiMQAA2iu/3j2XGyOFg8erfgHLJ/2CrRvktA5ee+kxmBAGgQMQIXu8nlMQeUd0MVmBmg6nPfyYxAADSIGKD33/n6L98C0LYCoEHE2/B//3w34YDyCaeF7HsCUGcB0CDigM5GBxzQbJCkoLw/Ogag9gKgQcQB5QAuitNMCsrL0S4AtRYAhUgLgEKkBUAh0gKgEGkBUIi0AChEWgAUIq3/B2QwnVKDOgnvAAAAAElFTkSuQmCC" alt="fig. 2" />
+<p class="caption">fig. 2</p>
+</div>
+<p>We see that the peak months for traffic accidents are the months from July to october. The package FARSread has other functions which will be demonstrated on the second vignette included in this package. Among those functions is a function that creates a map plot of a State with the location of the traffic accidents shown as points in the map.</p>
+<p>To gain a better understanding of the data in FARS we have provide below a brief description of the variables included in the 2015 FARS data. The FARS data for the year 2015 is included in this package. You can view the first 6 rows of the data in R on the console by typing the following:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FARSread)
+<span class="kw">head</span>(fars_2015)</code></pre></div>
+<p>A brief description of the variables has been included in the appendix at the bottom of this page. For a detailed description of the variables in the data you can download a copy of the pdf file <strong>Fatality Analysis Reporting System (FARS) Analytical User’s Manual 1975-2016</strong> available from the website <a href="https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447" class="uri">https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447</a></p>
+<p>Raw data from the year 2013 is also available with this package. You may access them like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fars_2013 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;accident_2013.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FARSread&quot;</span>) ### find the file path 
+
+<span class="kw">library</span>(FARSread) ### load package FARSread to access functions from the package
+
+accident_2013 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(fars_2013)</code></pre></div>
+<p>This ends the first part of the tutorial for the package FARSread. For the second tutorial, “Other functions in FARSread” we will be demonstrating the use of the function <code>fars_summarize_years</code> function and the <code>fars-map_state</code> function.</p>
+<p>The <code>fars_summarize_years</code> function is designed to facilitate creating a table that will show the number of traffic accidents for every month in a single or a number of years. Similar to the table we created above, but with less effort on your part. The <code>fars-map_state</code> function create a map plot using geospatial locationing to plot the location where the accidents occured in a particular State.</p>
+<p>We hope that you enjoyed our short presentation.</p>
+</div>
+<div id="appendix" class="section level3">
+<h3>Appendix</h3>
+<div id="list-of-variables-in-the-dataset-provided-in-package-farsread" class="section level5">
+<h5>List of variables in the dataset provided in package FARSread</h5>
+<table style="width:100%;">
+<colgroup>
+<col width="15%"></col>
+<col width="76%"></col>
+<col width="8%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Variable</th>
+<th align="left">Desscription</th>
+<th align="left">DataType</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>STATE</code></td>
+<td align="left">State number corresponding to a State in the USA</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ST_CASE</code></td>
+<td align="left">a unique case number assigned by the data entry system</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>VE_TOTAL</code></td>
+<td align="left">number of contact motor vehicles involved in the crash</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>VE_FORMS</code></td>
+<td align="left">number of vehicles in-transport involved in crash. Legally parked vehicles not included</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>PVH_INVL</code></td>
+<td align="left">count of the number of parked and working vehicles involved</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>PEDS</code></td>
+<td align="left">number of Person Forms (Not a Motor Vehicle Occupant)</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>PERNOTMVIT</code></td>
+<td align="left">number of non-motorists in the crash</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>PERMVIT</code></td>
+<td align="left">number of motorists in the crash</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>PERSONS</code></td>
+<td align="left">number of all persons involved in the crash</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>COUNTY</code></td>
+<td align="left">location of the unstabilized event with regard to the County</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>CITY</code></td>
+<td align="left">location of the unstabilized event with regard to the City</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>DAY</code></td>
+<td align="left">day of the month on which the crash occurred</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>MONTH</code></td>
+<td align="left">month in which the crash occurred</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>YEAR</code></td>
+<td align="left">the year in which the crash occurred</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>DAY_WEEK</code></td>
+<td align="left">the day of the week on which the crash occurred</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>HOUR</code></td>
+<td align="left">the hour at which the crash occurred</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>MINUTE</code></td>
+<td align="left">the minutes after the hour at which the crash occurred</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>NHS</code></td>
+<td align="left">whether the crash occurred on a trafficway that is part of the National Highway System.</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>RUR_URB</code></td>
+<td align="left">classification of the segment of the trafficway on which the crash occurred</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>FUNC_SYS</code></td>
+<td align="left">functional classification of the segment of the trafficway on which the crash occurred</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>RD_OWNER</code></td>
+<td align="left">legal owner of the segment of the trafficway on which the crash occurred</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ROUTE</code></td>
+<td align="left">the route signing of the trafficway on which the crash occurred.</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>TWAY_ID</code></td>
+<td align="left">the trafficway on which the crash occurred 1982-Later</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>TWAY_ID2</code></td>
+<td align="left">the trafficway on which the crash occurred 2004-Later</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>MILEPT</code></td>
+<td align="left">he milepoint nearest to the location where the crash occurred</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>LATITUDE</code></td>
+<td align="left">the position of latitude in Global Position coordinates</td>
+<td align="left">num</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>LONGITUD</code></td>
+<td align="left">the position of longitude in Global Position coordinates</td>
+<td align="left">num</td>
+</tr>
+<tr class="even">
+<td align="left"><code>SP_JUR</code></td>
+<td align="left">identifies if the location where the crash occurred qualifies as a Special Jurisdiction</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>HARM_EV</code></td>
+<td align="left">describes the first injury or damage producing event of the crash</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>MAN_COLL</code></td>
+<td align="left">describes the orientation of 2 motor vehicles involved in the “First Harmful Event”</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>RELJCT1</code></td>
+<td align="left">dentifies the crash’s location with respect to presence in an interchange area 1975-2009</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>RELJCT2</code></td>
+<td align="left">dentifies the crash’s location with respect to presence in an interchange area 2010-Later</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>TYP_INT</code></td>
+<td align="left">identifies and allows separation of various intersection types</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>WRK_ZONE</code></td>
+<td align="left">identifies whether the first harmful event occured within the boundaries of a work zone</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>REL_ROAD</code></td>
+<td align="left">identifies the location of the crash in relation to its position with the trafficway</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>LGT_COND</code></td>
+<td align="left">records the type/level of light that existed at the time of the crash</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>WEATHER1</code></td>
+<td align="left">the prevailing atmospheric conditions that existed at the time of the crash 1975-2006</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>WEATHER2</code></td>
+<td align="left">the prevailing atmospheric conditions that existed at the time of the crash 2007-Later</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>SCH_BUS</code></td>
+<td align="left">identifies if a school bus/vehicle functioning as a schoolbus, is related to the crash.</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>NOT_HOUR</code></td>
+<td align="left">the hour that emergency medical service was notified</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>NOT_MIN</code></td>
+<td align="left">the minutes after the hour that emergency medical service was notified</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ARR_HOUR</code></td>
+<td align="left">the hour that emergency medical service arrived</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ARR_MIN</code></td>
+<td align="left">the minutes after the hour that emergency medical service (EMS) arrived</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>HOSP_HR</code></td>
+<td align="left">the hour that emergency medical service arrived at the treatment facility</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>HOSP_MN</code></td>
+<td align="left">the minutes after the hour that EMS arrived at the treatment facility</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>CF1</code></td>
+<td align="left">factors related to the crash expressed by the investigating officer 1975-1981</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>CF2</code></td>
+<td align="left">factors related to the crash expressed by the investigating officer 1982-2013</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>CF3</code></td>
+<td align="left">factors related to the crash expressed by the investigating officer 2013-later</td>
+<td align="left">int</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>FATALS</code></td>
+<td align="left">the number of fatally injured persons in the crash</td>
+<td align="left">int</td>
+</tr>
+<tr class="even">
+<td align="left"><code>DRUNK_DR</code></td>
+<td align="left">the number of drinking drivers involved in the crash</td>
+<td align="left">int</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="references" class="section level3">
+<h3>References</h3>
+<ul>
+<li><p>FARS Analytical User’s Manual. 1975 - 2016. U. S. Department of Transportation. National Highway Traffic Safety Administration. National Center for Statistics and?Analysis. Washington, D.C. 20590</p></li>
+<li><p>National Highway Traffic Safety Administration <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a> website</p></li>
+</ul>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
