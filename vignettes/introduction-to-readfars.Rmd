@@ -193,14 +193,12 @@ ggplot(data = most_months, aes(x = mon_abb, y = count, group = 1)) + ### select 
 
 We see that the peak months for traffic accidents are the months from July to october. The package FARSread has other functions which will be demonstrated on the second vignette included in this package. Among those functions is a function that creates a map plot of a State with the location of the traffic accidents shown as points in the map. 
 
-To gain a better understanding of the data in FARS we have provide below a brief description of the variables included in the 2015 FARS data. The FARS data for the year 2015 is included in this package. You can view the first 6 rows of the data in R on the console by typing the following:
+To gain a better understanding of the data in FARS we have provided below a brief description of the variables in the appendix at the bottom  of this page. For a detailed description of the variables in the data you can download a copy of the pdf file **Fatality Analysis Reporting System (FARS) Analytical User's Manual 1975-2016** available from the website https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447. You can view the first 6 rows of the FARS data from 2015 in R on the console by typing the following:
 
 ```{r fars2015dta, echo=TRUE, eval=FALSE}
 library(FARSread)
 head(fars_2015)
 ```        
-
-A brief description of the variables has been included in the appendix at the bottom  of this page. For a detailed description of the variables in the data you can download a copy of the pdf file **Fatality Analysis Reporting System (FARS) Analytical User's Manual 1975-2016** available from the website https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447
 
 Raw data from the year 2013 is also available with this package. You may access them like so:
 

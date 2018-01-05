@@ -26,47 +26,111 @@ Package FARSread was designed to make it easy for R users to summarize and visua
 
 This is the second vignette for the package FARSread.  The first one entitled "Introduction to FARSread" familiarizes the reader with the function `fars_read` which reads the FARS data from the NHSTA into R.  If you haven't read it yet, we advise that you read it before proceeding with this second tutorial.
 
+```{r loadpackFARS}
+library(FARSread) ###load package FARSread so we can use the fars_read function
+```
+
 ### Data: fars2015
 
 Fatality Analysis Reporting System or FARS contains data derived from a census of fatal motor vehicle traffic crashes within the 50 States, the District of Columbia, and Puerto Rico. FARS data is available for every year since FARS was established in 1975.
 
 Interested parties may access data tables at [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx), download files via FTP at ftp://ftp.nhtsa.dot.gov/fars/, or make requests through the [Publications and Data Requests page](www-nrd.nhtsa.dot.gov/Cats/Index.aspx). Information requests can also be made by phone at 800-934-8517, or by e-mail at ncsaweb@dot.gov 
 
-A copy of the FARS data for the year 2015 is included in this package and will be used for this tutorial.
+### Downloading file from NHTSA's ftp site
 
-### Reading the data in R: The fars_read function
+We have obtained the URL for the 2013, 2014, and 2015 National FARS data from the [NHSTA's](www-fars.nhtsa.dot.gov/Main/index.aspx) website and we will use it to download the file from the NHSTA's ftp site. 
 
-The fars_read() is the function we use to read the fars data in R. The fars data usually comes in a .csv format with a file name like **"accident.csv"**. It's a good idea to rename the file to reflect the year the data was obtained, like **"accident_2015"** in case you are working with mulitple years. We use the file name as an argument to the function and save it as an R object with the name `accident_2015` lor any name you like. This function was discussed extensively in the first tutorial and will be mentioned here only in passing.
+First we'll create folders or directories to contain the zip file.  
+
+```{r createfolders, echo=TRUE, eval=FALSE}
+if(!file.exists("data")){ ### create folder for 2013 zip file
+  		dir.create("farsdata2013")
+}
+
+if(!file.exists("data")){ ### create folder for 2014 zip file
+  		dir.create("farsdata2014")
+}
+
+if(!file.exists("data")){ ### create folder for 2015 zip file
+  		dir.create("farsdata2014")
+}
+```
+
+Next, we will save the URL's for files in an R object.
+
+```{r saveurl, echo=TRUE, eval=FALSE}
+fileurl2013 <- "ftp://ftp.nhtsa.dot.gov/fars/2013/National/FARS2013NationalCSV.zip" ### URL for 2013 data
+
+fileurl2014 <- "ftp://ftp.nhtsa.dot.gov/fars/2014/National/FARS2014NationalCSV.zip" ### URL for 2014 data
+
+fileurl2015 <- "ftp://ftp.nhtsa.dot.gov/fars/2015/National/FARS2015NationalCSV.zip" ### URL for 2015 data
+
+```
+
+Now we download the files for the year 2013 and save it to the appropriate folder. Using the `unzip` function in R, we extract the `accident.csv` file from each of the zip files.  We then read the accident.csv` file in R using the `fars_read` function from the `FARSread` package and write a new file in .csv.bz2 format in the working directory . We'll explain in a little while why we need to do this. This may take a considerable amount of time.
+
+```{r dwnldfiles1, echo=TRUE, eval=FALSE}
+download.file(fileurl2013, destfile="./farsdata2013/FARS2013NationalCSV.zip") ### download file and save in farsdata2013
+
+unzip("./farsdata2013/FARS2013NationalCSV.zip", exdir = "./farsdata2013", files = "accident.csv") ### unzip file and extract accident.csv file
+
+acc_2013 <- fars_read("./farsdata2013/accident.csv") ### read file into R and save as an R object called acc_2013
+
+write.csv(acc_2013, ### We use acc_2013 as the first argument in the function write.csv
+          file = "accident2013.csv.bz2", ### create accident_2013.csv.bz2 in the working directory
+          row.names = FALSE) ### do not create a new column of rownames when you read in the file in R
+
+unlink("./farsdata2013/accident.csv") ### delete accident.csv file
+
+unlink("./farsdata2013/FARS2013NationalCSV.zip") ### delete FARS2013NationalCSV.zip file
+```
+
+Then for the 2014 FARS data...
+
+```{r dwnldfiles2, echo=TRUE, eval=FALSE}
+download.file(fileurl2014, destfile="./farsdata2014/FARS2014NationalCSV.zip") ### download file and save in farsdata2014
+
+unzip("./farsdata2014/FARS2014NationalCSV.zip", exdir = "./farsdata2014", files = "accident.csv") ### unzip file and extract accident.csv file
+
+acc_2014 <- fars_read("./farsdata2014/accident.csv") ### read file into R and save as an R object called acc_2014
+
+write.csv(acc_2014, ### We use acc_2014 as the first argument in the function write.csv
+          file = "accident2014.csv.bz2", ### create accident_2014.csv.bz2 in the working directory
+          row.names = FALSE) ### do not create a new column of rownames when you read in the file in R
+
+unlink("./farsdata2014/accident.csv") ### delete accident.csv file
+
+unlink("./farsdata2014/FARS2014NationalCSV.zip") ### delete FARS2014NationalCSV.zip file
+```
+
+Then for the 2015 FARS data.
+
+```{r dwnldfiles3, echo=TRUE, eval=FALSE}
+download.file(fileurl2015, destfile="./farsdata2015/FARS2015NationalCSV.zip") ### download file and save in farsdata2015
+
+unzip("./farsdata2015/FARS2015NationalCSV.zip", exdir = "./farsdata2015", files = "accident.csv") ### unzip file and extract accident.csv file
+
+acc_2015 <- fars_read("./farsdata2015/accident.csv") ### read file into R and save as an R object called acc_2015
+
+write.csv(acc_2015, ### We use acc_2015 as the first argument in the function write.csv
+          file = "accident2015.csv.bz2", ### create accident_2015.csv.bz2 in the working directory
+          row.names = FALSE) ### do not create a new column of rownames when you read in the file in R
+
+unlink("./farsdata2015/accident.csv") ### delete accident.csv file
+
+unlink("./farsdata2015/FARS2015NationalCSV.zip") ### delete FARS2015NationalCSV.zip file
+```
 
 ### The fars_summarize_years function
 
-The `fars_summarize_years` function is designed to create a table that will show the number of traffic accidents for every month in a single or a number of years, provided that you have the data from the NHSTA in your working directory.  
+The `fars_summarize_years` function is designed to create a table that will show the number of traffic accidents for every month in a single or a number of years, provided that you have the data from the NHSTA in your working directory in a .csv.bz2 format.  
 
-It takes as input the year that the user wants to analyze. This is specially advantageous to new users in R who may not be familiar with manipulating data in order to arrive at the information they need. The FARS data has many valuables which provide a lot of information.  But, if you're only interested in comparing the number of traffic accidents by month in a particular year or several years, then the 'fars_summarize_years` can save you a lot of time and effort.
+Unlike the `fars_read` function which reads into R a .csv file or a .csv.bz2 file, the `fars_summarize_year` function requires a .csv.bz2 file to work. A .csv.bz2 file occupy less space in your hard drive, which is the reason we saved the file in this format. The .csv file of the 2015 National FARS data occupies 5.17 MB of your hard drive while the .csv.bz2 file occupies only 876 KB.  A whopping difference!!!
 
-To begin we must first obtain the data from the NHSTA. This can be accomplished by using your browser and downloading the data from their ftp site (the URL for the ftp site is available above) or requesting the data by phone or email. If you download the data using the ftp site, you will receive a zip file containing several `.csv` files. We are interested in the file named `accident.csv`.The data is available for each year beginning in 1975. Separate downloads will have to be made for each year of data you wish to analyze.
-
-You may unzip the file using a local software in your computer such as `WinRAR` in Windows or use the unzip function in R. After unzipping the files, it's a good idea to change the name of the file to reflect the year the data was derived from. Changing `accident.csv` to `accident_2015.csv` will avoid confusion in case you are working with multiple years. Another reason why it's a good idea is because you cannot keep a file with same file name in the same directory. 
-
-You are now ready to use the `fars_read` function to explore the data. You might find the first vignette included in this package, "Introduction to FARSread" helpful for this purpose. Let's load the package `readFARS` to access the `fars_summarize_years`  and `fars_map_state` functions .
-
-Now that we have access to the `fars_summarize_function` and we also have our data, `accident_2015.csv`. What else do we need? 
-
-Before we can use the `fars_summarize_function`, we must first read in the file `accident_2015.csv` in R, using the `fars_read` function and save the output as a variable in R. 
-
-We then save that output/variable to a .csv.bz2 file. **WHY?** Unlike the `fars_read` function which reads into R a .csv file, the `fars_summarize_year` function requires a .csv.bz2 file to work. 
-
-Fortunately, we have  the `write.csv` function in R to do that. **WARNING - using the `write.csv` function as shown below will create the file `accident_2015.csv.bz2` in your working directory**.
+We are now ready to use the `fars_summarize_years` function It takes as input the year that the user wants to analyze. This is specially advantageous to new users in R who may not be familiar with manipulating data in order to arrive at the information they need. The FARS data has many valuables which provide a lot of information.  But, if you're only interested in comparing the number of traffic accidents by month in a particular year or several years, then the 'fars_summarize_years` can save you a lot of time and effort.
 
 ```{r demosumfunc}
-library(FARSread)
-accident_2015 <- fars_read("accident_2015.csv") ### read the downoaded .csv file and save it as accident_2015
-
-write.csv(accident_2015, ### We use accident_2015 as the first argument in the function write.csv
-          file = bzfile("accident_2015.csv.bz2"), ### create a new file in .csv.bz2 format with the name accident_2015.csv.bz2
-          row.names = FALSE) ### do not create a new column of rownames when you read in the file in R
-
-fars_summarize_years(2015) ### The first argument to this function is the year you want to analyze. You may input as many years as you wish provided that the data for that year is available in a .csv.bnz2 format in your working directory
+most_months <- fars_summarize_years(2015) ### The first argument to this function is the year you want to analyze. You may input as many years as you wish provided that the data for that year is available in a .csv.bnz2 format in your working directory
 ```
 
 the output of the `fars_summarize_years` function is a table providing a summary of the number of tracffic accidents for each month of 2015.  
@@ -78,7 +142,7 @@ library(forcats) ### load package forcats to change factor levels
 library(dplyr) ###load package dplyr to access %>%  forward pipe operator
 library(ggplot2) ### load package ggplot2 for plotting data
 
-most_months <- fars_summarize_years(2015) %>% ### save the output as a variable named most_months
+most_months <- most_months  %>% ### get the table we created called summ_months
         mutate(mon_abb = as.factor(month.abb)) %>% ### create a new variable of abbreviations for month names
         as.data.frame() ### save result as a data frame
 
@@ -239,7 +303,7 @@ But before we can plot the results, we first have to find the relative centers w
 
 ```{r conflpoints}
 
-acc_2015 <- fars_read("accident_2015.csv") ### read in the FARS data for 2015
+acc_2015 <- fars_read("accident_2015.csv.bz2") ### read in the FARS data for 2015
 
 texas <- acc_2015 %>% ### 2015 FARS data
         filter(STATE == 48) %>% ### limit our analysis to the State of Texas
