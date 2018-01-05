@@ -15,7 +15,8 @@ Depends: R (>= 3.4.1)
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    ggplot2
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Imports: dplyr (>= 0.7.4), magrittr (>= 1.5), maps (>= 3.2.0), tidyr (>= 0.7.2), readr (>= 1.1.1)
