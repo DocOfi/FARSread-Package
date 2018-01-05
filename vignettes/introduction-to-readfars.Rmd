@@ -24,6 +24,10 @@ knitr::opts_chunk$set(
 
 Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). This document hopes to familiarize the reader with the fars_read function from the package FARSread and the variables contained in a FARS data file.
 
+```{r loadpackFARS}
+library(FARSread) ###load package FARSread so we can use the fars_read function and other functions in the Package
+```
+
 ### Data: fars2015
 
 Fatality Analysis Reporting System or FARS contains data derived from a census of fatal motor vehicle traffic crashes within the 50 States, the District of Columbia, and Puerto Rico. FARS data is available for every year since FARS was established in 1975.
@@ -41,40 +45,43 @@ You can rename a file in R Studio. Go to the lower right pane in R Studio and se
 If you know the URL for the file you want to download, you can download the file inside R itself. One of the great things about R is its versatility. It can be adapted to different demands of the workspace by utilizing the different packages that has been developed for it.
 
 ```{r dwnldfars, echo=TRUE, eval=FALSE}
+if(!file.exists("farsdata2015")){ ### create folder for 2015 zip file
+  		dir.create("farsdata2015")
+}
 
 fileurl2015 <- "ftp://ftp.nhtsa.dot.gov/fars/2015/National/FARS2015NationalCSV.zip" ### URL of the file we want to download
 
-download.file(fileurl2015,destfile="FARS2014NationalCSV.zip") ###downloading the .zip file
+download.file(fileurl2015, destfile="./farsdata2015/FARS2015NationalCSV.zip") ### download file and save in farsdata2015
 
 dateDownloaded2015 <- date() ### recording the date and time of our download
 dateDownloaded2015
 
-file2015 <- "FARS2014NationalCSV.zip" ### Assign file name to an R object
-unzip(file2015) ### unzip the file
+unzip("./farsdata2015/FARS2015NationalCSV.zip", exdir = "./farsdata2015", files = "accident.csv") ### unzip file and extract accident.csv file
 
-list.files() ### show all the content of the zip file
+acc_2015 <- fars_read("./farsdata2015/accident.csv") ### read file into R and save as an R object called accident_2015
 ```
 
-Once you have unzipped the file, look for the file `accident.csv` and rename it to `accident_2015`.   
+We have read `accident.csv` from the zip file we downloaded. We assigned it to an R object named `acc_2015`. But before we can start analyzing the data, we need to do some housekeeping chores.   
+
+Zip files from ftp site of the [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx) all contain the `accident.csv` file.  So if you downloaded several years of FARS data it might becoming confusing which file is from which year. Furthermore, the .csv file takes up a lot of space on your hard drive. We can compress this file and save it in a .csv.bz2 format to lessen the file size. **WARNING!!!** The next chunk of codes will create a file in your working directory.
+
+```{r readwritefars, echo=TRUE, eval=FALSE}
+write.csv(acc_2015, ### from the R object acc_2015 
+          file = "accident_2015.csv.bz2", ### we create the accident_2015.csv.bz2 in the working directory
+          row.names = FALSE) ### do not create a new column of rownames when you read in the file in R
+
+unlink("./farsdata2015/accident.csv") ### delete accident.csv file
+
+unlink("./farsdata2015/FARS2015NationalCSV.zip") ### delete FARS2015NationalCSV.zip file
+```
 
 ### Reading the data in R: The fars_read function
 
-The fars_read() is the function we use to read the fars data in R. We use the file name as an argument to the function and save it as an R object with the name `"accident_2015"` like so:
+We already used the `fars_read` function earlier to read the `accident.csv` file from the zip file. We will now use the same function to read the `accident2015.csv.bz2` file we created to demonstrate the versatility of this function.
 
+```{r readcsvbz2file}
+accident_2015 <- fars_read("accident_2015.csv.bz2") ### read accident2015.csv.bz2 file into R and save as an R object called accident_2015
 ```
-accident_2015 <- fars_read("accident_2015.csv")
-
-```
-We are not limited as to what name to assign to the output. We can actually save the result to whatever name you like. You may find `acc_2015` or `fars_2015` easier to use as it is shorter than `accident_2015`. It contains less letters and therefore easier to type on the keyboard.
-
-For this tutorial we have downloaded the fars data for the year 2015 for you. We changed the file name from `accident.csv` to `accident_2015.csv` and read it in R. We will now use the function `fars_read` to read the file `accident_2015.csv` in your working directory and save the output in the R object `accident_2015`. My fingers needed more exercise. But before we can do all that, we'll first need to load the package `FARSread` which contains the `fars_read` function among others.
-
-```{r reainfars}
-library(FARSread)
-accident_2015 <- fars_read("accident_2015.csv") ### Read the file accident_2015.csv and assign it to an R object named accident_2015
-```
-
-The data has `r dim(accident_2015)[1]` rows and `r dim(accident_2015)[2]` columns.
 
 ### Looking at the variables in our data
 
@@ -83,7 +90,7 @@ Once the data is read in R, we can use all the functions available in R to analy
 To see what variables are present in the data we can use the r function `glimpse` from the package `dplyr`.  You can see the results below but first we have to load the dplyr package using the function `library`.
 
 ```{r farsstr, message=FALSE, warning=FALSE}
-library(dplyr) ### load package dplyr to access the  function glimpse
+library(dplyr) ### load package dplyr to access the function glimpse
 glimpse(accident_2015) ### view the variable names 
 ```
 
@@ -177,11 +184,9 @@ most_months <- accident_2015 %>% ### data that we read in R
 most_months
 ```
 
-It's hard to see a trend or compare values looking at a table. We can better appreciate the results by plotting them and this time we'll use the function `ggplot` from the package `ggplot2`. We'll load this package again using the function`library`.  We will also need the package forcats to rearrange the levels of the variable `mon.abb` so it will print the months in the correct order. 
-
+It's hard to see a trend or compare values looking at a table. We can better appreciate the results by plotting them and this time we'll use the function `ggplot` from the package `ggplot2`. We'll load this package again using the function`library`. 
 ```{r plotmonthcount, fig.width = 7, fig.height = 4, fig.cap="fig. 2"}
-library(forcats) ### load package forcats to change factor levels
-most_months$mon_abb <- fct_relevel(most_months$mon_abb, "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec") ### change factor levels to correctly plot the data using ggplot
+most_months$mon_abb <- factor(c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")) ### assign factor levels to correctly plot the data
 
 library(ggplot2) ### load ggplot2 package for plotting data
 ggplot(data = most_months, aes(x = mon_abb, y = count, group = 1)) + ### select the data and variables we will plot

@@ -43,16 +43,16 @@ We have obtained the URL for the 2013, 2014, and 2015 National FARS data from th
 First we'll create folders or directories to contain the zip file.  
 
 ```{r createfolders, echo=TRUE, eval=FALSE}
-if(!file.exists("data")){ ### create folder for 2013 zip file
+if(!file.exists("farsdata2013")){ ### create folder for 2013 zip file
   		dir.create("farsdata2013")
 }
 
-if(!file.exists("data")){ ### create folder for 2014 zip file
+if(!file.exists("farsdata2014")){ ### create folder for 2014 zip file
   		dir.create("farsdata2014")
 }
 
-if(!file.exists("data")){ ### create folder for 2015 zip file
-  		dir.create("farsdata2014")
+if(!file.exists("farsdata2015")){ ### create folder for 2015 zip file
+  		dir.create("farsdata2015")
 }
 ```
 
@@ -72,12 +72,15 @@ Now we download the files for the year 2013 and save it to the appropriate folde
 ```{r dwnldfiles1, echo=TRUE, eval=FALSE}
 download.file(fileurl2013, destfile="./farsdata2013/FARS2013NationalCSV.zip") ### download file and save in farsdata2013
 
+dateDownloaded2013 <- date() ### recording the date and time of our download
+dateDownloaded2013
+
 unzip("./farsdata2013/FARS2013NationalCSV.zip", exdir = "./farsdata2013", files = "accident.csv") ### unzip file and extract accident.csv file
 
 acc_2013 <- fars_read("./farsdata2013/accident.csv") ### read file into R and save as an R object called acc_2013
 
 write.csv(acc_2013, ### We use acc_2013 as the first argument in the function write.csv
-          file = "accident2013.csv.bz2", ### create accident_2013.csv.bz2 in the working directory
+          file = "accident_2013.csv.bz2", ### create accident_2013.csv.bz2 in the working directory
           row.names = FALSE) ### do not create a new column of rownames when you read in the file in R
 
 unlink("./farsdata2013/accident.csv") ### delete accident.csv file
@@ -90,12 +93,15 @@ Then for the 2014 FARS data...
 ```{r dwnldfiles2, echo=TRUE, eval=FALSE}
 download.file(fileurl2014, destfile="./farsdata2014/FARS2014NationalCSV.zip") ### download file and save in farsdata2014
 
+dateDownloaded2014 <- date() ### recording the date and time of our download
+dateDownloaded2014
+
 unzip("./farsdata2014/FARS2014NationalCSV.zip", exdir = "./farsdata2014", files = "accident.csv") ### unzip file and extract accident.csv file
 
 acc_2014 <- fars_read("./farsdata2014/accident.csv") ### read file into R and save as an R object called acc_2014
 
 write.csv(acc_2014, ### We use acc_2014 as the first argument in the function write.csv
-          file = "accident2014.csv.bz2", ### create accident_2014.csv.bz2 in the working directory
+          file = "accident_2014.csv.bz2", ### create accident_2014.csv.bz2 in the working directory
           row.names = FALSE) ### do not create a new column of rownames when you read in the file in R
 
 unlink("./farsdata2014/accident.csv") ### delete accident.csv file
@@ -108,12 +114,15 @@ Then for the 2015 FARS data.
 ```{r dwnldfiles3, echo=TRUE, eval=FALSE}
 download.file(fileurl2015, destfile="./farsdata2015/FARS2015NationalCSV.zip") ### download file and save in farsdata2015
 
+dateDownloaded2015 <- date() ### recording the date and time of our download
+dateDownloaded2015
+
 unzip("./farsdata2015/FARS2015NationalCSV.zip", exdir = "./farsdata2015", files = "accident.csv") ### unzip file and extract accident.csv file
 
 acc_2015 <- fars_read("./farsdata2015/accident.csv") ### read file into R and save as an R object called acc_2015
 
 write.csv(acc_2015, ### We use acc_2015 as the first argument in the function write.csv
-          file = "accident2015.csv.bz2", ### create accident_2015.csv.bz2 in the working directory
+          file = "accident_2015.csv.bz2", ### create accident_2015.csv.bz2 in the working directory
           row.names = FALSE) ### do not create a new column of rownames when you read in the file in R
 
 unlink("./farsdata2015/accident.csv") ### delete accident.csv file
@@ -138,7 +147,6 @@ the output of the `fars_summarize_years` function is a table providing a summary
 Notice that table above is the same table we created in the first tutorial but it only took us one line of code with one argument `2015` in order to arrive at the same output. Just as an exercise we will plot the result in the same way that we did in the previous tutorial. 
 
 ```{r plotmonthcount, fig.width = 7, fig.height = 4, fig.cap="fig. 1"}
-library(forcats) ### load package forcats to change factor levels
 library(dplyr) ###load package dplyr to access %>%  forward pipe operator
 library(ggplot2) ### load package ggplot2 for plotting data
 
@@ -146,11 +154,11 @@ most_months <- most_months  %>% ### get the table we created called summ_months
         mutate(mon_abb = as.factor(month.abb)) %>% ### create a new variable of abbreviations for month names
         as.data.frame() ### save result as a data frame
 
-most_months$mon_abb <- fct_relevel(most_months$mon_abb, "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec") ### change factor levels to correctly plot the data using ggplot
+most_months$mon_abb <- factor(most_months$mon_abb, levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")) ### assign factor levels to correctly plot the data
 
 most_months
 
-colnames(most_months) <- c("MONTH", "count", "mon_abb")
+colnames(most_months) <- c("MONTH", "count", "mon_abb") ### change variable name `2015` to count
 
 ggplot(data = most_months, aes(x = mon_abb, y = count, group = 1)) + ### select the data and variables we will plot
         geom_line(colour = "red", linetype = "dashed", size = 1.5) + ### plot data as a line
@@ -183,7 +191,7 @@ names(comp_yrs) <- c("month", "yr2013", "yr2014", "yr2015") ### change variable/
 
 comp_yrs <- comp_yrs %>% mutate(month = as.factor(month.abb)) ### change the numerical representation of months to abbreviations
 
-comp_yrs$month <- fct_relevel(comp_yrs$month, "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec") ### change factor levels to correctly plot the data using ggplot
+comp_yrs$month <- factor(comp_yrs$month, levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")) ### assign factor levels to correctly plot the data
 
 library(tidyr) ### load package tidyr so we can access the function gather()
 long_comp_yrs <- gather(comp_yrs, key = key, value = value, -month) ### change data frame structure to facilitate  plotting with ggplot
