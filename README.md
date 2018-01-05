@@ -34,4 +34,11 @@ R_variable <- fars_read("accident_2013.csv")
 write.csv(R_variable, file = bzfile("file_name.csv.bz2"), row.names = FALSE)
 
 ```
+### Vignettes
+
+To view the html files in the vignettes folder, click on the following links:
+
+[introduction-to-readfars](https://htmlpreview.github.io/?https://github.com/DocOfi/FARSread-Package/blob/master/vignettes/introduction-to-readfars.html)
+[functions-readfars](https://htmlpreview.github.io/?https://github.com/DocOfi/FARSread-Package/blob/master/vignettes/functions-readfars.html)
+
 
