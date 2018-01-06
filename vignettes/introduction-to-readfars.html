@@ -12,7 +12,7 @@
 
 <meta name="author" content="Edmund julian L Ofilada" />
 
-<meta name="date" content="2018-01-04" />
+<meta name="date" content="2018-01-06" />
 
 <title>Introduction to FARSread</title>
 
@@ -70,13 +70,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to FARSread</h1>
 <h4 class="author"><em>Edmund julian L Ofilada</em></h4>
-<h4 class="date"><em>2018-01-04</em></h4>
+<h4 class="date"><em>2018-01-06</em></h4>
 
 
 
 <div id="package-farsread" class="section level2">
 <h2>Package FARSread</h2>
 <p>Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a>. This document hopes to familiarize the reader with the fars_read function from the package FARSread and the variables contained in a FARS data file.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FARSread) ###load package FARSread so we can use the fars_read function and other functions in the Package</code></pre></div>
 <div id="data-fars2015" class="section level3">
 <h3>Data: fars2015</h3>
 <p>Fatality Analysis Reporting System or FARS contains data derived from a census of fatal motor vehicle traffic crashes within the 50 States, the District of Columbia, and Puerto Rico. FARS data is available for every year since FARS was established in 1975.</p>
@@ -88,36 +89,40 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="downloading-the-file-in-r" class="section level3">
 <h3>Downloading the file in R</h3>
 <p>If you know the URL for the file you want to download, you can download the file inside R itself. One of the great things about R is its versatility. It can be adapted to different demands of the workspace by utilizing the different packages that has been developed for it.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw">file.exists</span>(<span class="st">&quot;farsdata2015&quot;</span>)){ ### create folder for 2015 zip file
+        <span class="kw">dir.create</span>(<span class="st">&quot;farsdata2015&quot;</span>)
+}
+
 fileurl2015 &lt;-<span class="st"> &quot;ftp://ftp.nhtsa.dot.gov/fars/2015/National/FARS2015NationalCSV.zip&quot;</span> ### URL of the file we want to download
 
-<span class="kw">download.file</span>(fileurl2015,<span class="dt">destfile=</span><span class="st">&quot;FARS2014NationalCSV.zip&quot;</span>) ###downloading the .zip file
+<span class="kw">download.file</span>(fileurl2015, <span class="dt">destfile=</span><span class="st">&quot;./farsdata2015/FARS2015NationalCSV.zip&quot;</span>) ### download file and save in farsdata2015
 
 dateDownloaded2015 &lt;-<span class="st"> </span><span class="kw">date</span>() ### recording the date and time of our download
 dateDownloaded2015
 
-file2015 &lt;-<span class="st"> &quot;FARS2014NationalCSV.zip&quot;</span> ### Assign file name to an R object
-<span class="kw">unzip</span>(file2015) ### unzip the file
+<span class="kw">unzip</span>(<span class="st">&quot;./farsdata2015/FARS2015NationalCSV.zip&quot;</span>, <span class="dt">exdir =</span> <span class="st">&quot;./farsdata2015&quot;</span>, <span class="dt">files =</span> <span class="st">&quot;accident.csv&quot;</span>) ### unzip file and extract accident.csv file
 
-<span class="kw">list.files</span>() ### show all the content of the zip file</code></pre></div>
-<p>Once you have unzipped the file, look for the file <code>accident.csv</code> and rename it to <code>accident_2015</code>.</p>
+acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;./farsdata2015/accident.csv&quot;</span>) ### read file into R and save as an R object called accident_2015</code></pre></div>
+<p>We have read <code>accident.csv</code> from the zip file we downloaded. We assigned it to an R object named <code>acc_2015</code>. But before we can start analyzing the data, we need to do some housekeeping chores.</p>
+<p>Zip files from ftp site of the <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a> all contain the <code>accident.csv</code> file. So if you downloaded several years of FARS data it might becoming confusing which file is from which year. Furthermore, the .csv file takes up a lot of space on your hard drive. We can compress this file and save it in a .csv.bz2 format to lessen the file size. <strong>WARNING!!!</strong> The next chunk of codes will create a file in your working directory.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write.csv</span>(acc_2015, ### from the R object acc_2015 
+          <span class="dt">file =</span> <span class="st">&quot;accident_2015.csv.bz2&quot;</span>, ### we create the accident_2015.csv.bz2 in the working directory
+          <span class="dt">row.names =</span> <span class="ot">FALSE</span>) ### do not create a new column of rownames when you read in the file in R
+
+<span class="kw">unlink</span>(<span class="st">&quot;./farsdata2015/accident.csv&quot;</span>) ### delete accident.csv file
+
+<span class="kw">unlink</span>(<span class="st">&quot;./farsdata2015/FARS2015NationalCSV.zip&quot;</span>) ### delete FARS2015NationalCSV.zip file</code></pre></div>
 </div>
 <div id="reading-the-data-in-r-the-fars_read-function" class="section level3">
 <h3>Reading the data in R: The fars_read function</h3>
-<p>The fars_read() is the function we use to read the fars data in R. We use the file name as an argument to the function and save it as an R object with the name <code>&quot;accident_2015&quot;</code> like so:</p>
-<pre><code>accident_2015 &lt;- fars_read(&quot;accident_2015.csv&quot;)
-</code></pre>
-<p>We are not limited as to what name to assign to the output. We can actually save the result to whatever name you like. You may find <code>acc_2015</code> or <code>fars_2015</code> easier to use as it is shorter than <code>accident_2015</code>. It contains less letters and therefore easier to type on the keyboard.</p>
-<p>For this tutorial we have downloaded the fars data for the year 2015 for you. We changed the file name from <code>accident.csv</code> to <code>accident_2015.csv</code> and read it in R. We will now use the function <code>fars_read</code> to read the file <code>accident_2015.csv</code> in your working directory and save the output in the R object <code>accident_2015</code>. My fingers needed more exercise. But before we can do all that, we’ll first need to load the package <code>FARSread</code> which contains the <code>fars_read</code> function among others.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FARSread)
-accident_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;accident_2015.csv&quot;</span>) ### Read the file accident_2015.csv and assign it to an R object named accident_2015</code></pre></div>
-<p>The data has 32166 rows and 52 columns.</p>
+<p>We already used the <code>fars_read</code> function earlier to read the <code>accident.csv</code> file from the zip file. We will now use the same function to read the <code>accident2015.csv.bz2</code> file we created to demonstrate the versatility of this function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">accident_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;accident_2015.csv.bz2&quot;</span>) ### read accident2015.csv.bz2 file into R and save as an R object called accident_2015</code></pre></div>
 </div>
 <div id="looking-at-the-variables-in-our-data" class="section level3">
 <h3>Looking at the variables in our data</h3>
 <p>Once the data is read in R, we can use all the functions available in R to analyze the data</p>
 <p>To see what variables are present in the data we can use the r function <code>glimpse</code> from the package <code>dplyr</code>. You can see the results below but first we have to load the dplyr package using the function <code>library</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr) ### load package dplyr to access the  function glimpse
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr) ### load package dplyr to access the function glimpse
 <span class="kw">glimpse</span>(accident_2015) ### view the variable names 
 <span class="co">#&gt; Observations: 32,166</span>
 <span class="co">#&gt; Variables: 52</span>
@@ -293,9 +298,8 @@ most_months
 <span class="co">#&gt; 10    10  3019     Oct</span>
 <span class="co">#&gt; 11    11  2724     Nov</span>
 <span class="co">#&gt; 12    12  2781     Dec</span></code></pre></div>
-<p>It’s hard to see a trend or compare values looking at a table. We can better appreciate the results by plotting them and this time we’ll use the function <code>ggplot</code> from the package <code>ggplot2</code>. We’ll load this package again using the function<code>library</code>. We will also need the package forcats to rearrange the levels of the variable <code>mon.abb</code> so it will print the months in the correct order.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(forcats) ### load package forcats to change factor levels
-most_months$mon_abb &lt;-<span class="st"> </span><span class="kw">fct_relevel</span>(most_months$mon_abb, <span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>) ### change factor levels to correctly plot the data using ggplot
+<p>It’s hard to see a trend or compare values looking at a table. We can better appreciate the results by plotting them and this time we’ll use the function <code>ggplot</code> from the package <code>ggplot2</code>. We’ll load this package again using the function<code>library</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">most_months$mon_abb &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>), <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>)) ### assign factor levels to correctly plot the data
 
 <span class="kw">library</span>(ggplot2) ### load ggplot2 package for plotting data
 <span class="kw">ggplot</span>(<span class="dt">data =</span> most_months, <span class="kw">aes</span>(<span class="dt">x =</span> mon_abb, <span class="dt">y =</span> count, <span class="dt">group =</span> <span class="dv">1</span>)) +<span class="st"> </span>### select the data and variables we will plot
@@ -308,10 +312,9 @@ most_months$mon_abb &lt;-<span class="st"> </span><span class="kw">fct_relevel</
 <p class="caption">fig. 2</p>
 </div>
 <p>We see that the peak months for traffic accidents are the months from July to october. The package FARSread has other functions which will be demonstrated on the second vignette included in this package. Among those functions is a function that creates a map plot of a State with the location of the traffic accidents shown as points in the map.</p>
-<p>To gain a better understanding of the data in FARS we have provide below a brief description of the variables included in the 2015 FARS data. The FARS data for the year 2015 is included in this package. You can view the first 6 rows of the data in R on the console by typing the following:</p>
+<p>To gain a better understanding of the data in FARS we have provided below a brief description of the variables in the appendix at the bottom of this page. For a detailed description of the variables in the data you can download a copy of the pdf file <strong>Fatality Analysis Reporting System (FARS) Analytical User’s Manual 1975-2016</strong> available from the website <a href="https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447" class="uri">https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447</a>. You can view the first 6 rows of the FARS data from 2015 in R on the console by typing the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FARSread)
 <span class="kw">head</span>(fars_2015)</code></pre></div>
-<p>A brief description of the variables has been included in the appendix at the bottom of this page. For a detailed description of the variables in the data you can download a copy of the pdf file <strong>Fatality Analysis Reporting System (FARS) Analytical User’s Manual 1975-2016</strong> available from the website <a href="https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447" class="uri">https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447</a></p>
 <p>Raw data from the year 2013 is also available with this package. You may access them like so:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fars_2013 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;accident_2013.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FARSread&quot;</span>) ### find the file path 
 

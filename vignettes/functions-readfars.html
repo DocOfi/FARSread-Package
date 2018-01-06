@@ -12,7 +12,7 @@
 
 <meta name="author" content="Edmund julian L Ofilada" />
 
-<meta name="date" content="2018-01-04" />
+<meta name="date" content="2018-01-06" />
 
 <title>Other functions in FARSread</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Other functions in FARSread</h1>
 <h4 class="author"><em>Edmund julian L Ofilada</em></h4>
-<h4 class="date"><em>2018-01-04</em></h4>
+<h4 class="date"><em>2018-01-06</em></h4>
 
 
 
@@ -78,54 +78,94 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Package FARSread</h2>
 <p>Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a>. This document will familiarize the reader with the <code>fars_summarize_years</code> function and the <code>The fars_map_state</code> function from the package readFARS.</p>
 <p>This is the second vignette for the package FARSread. The first one entitled “Introduction to FARSread” familiarizes the reader with the function <code>fars_read</code> which reads the FARS data from the NHSTA into R. If you haven’t read it yet, we advise that you read it before proceeding with this second tutorial.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FARSread) ###load package FARSread so we can use the fars_read function</code></pre></div>
 <div id="data-fars2015" class="section level3">
 <h3>Data: fars2015</h3>
 <p>Fatality Analysis Reporting System or FARS contains data derived from a census of fatal motor vehicle traffic crashes within the 50 States, the District of Columbia, and Puerto Rico. FARS data is available for every year since FARS was established in 1975.</p>
 <p>Interested parties may access data tables at <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a>, download files via FTP at <a href="ftp://ftp.nhtsa.dot.gov/fars/" class="uri">ftp://ftp.nhtsa.dot.gov/fars/</a>, or make requests through the <a href="www-nrd.nhtsa.dot.gov/Cats/Index.aspx">Publications and Data Requests page</a>. Information requests can also be made by phone at 800-934-8517, or by e-mail at <a href="mailto:ncsaweb@dot.gov">ncsaweb@dot.gov</a></p>
-<p>A copy of the FARS data for the year 2015 is included in this package and will be used for this tutorial.</p>
 </div>
-<div id="reading-the-data-in-r-the-fars_read-function" class="section level3">
-<h3>Reading the data in R: The fars_read function</h3>
-<p>The fars_read() is the function we use to read the fars data in R. The fars data usually comes in a .csv format with a file name like <strong>“accident.csv”</strong>. It’s a good idea to rename the file to reflect the year the data was obtained, like <strong>“accident_2015”</strong> in case you are working with mulitple years. We use the file name as an argument to the function and save it as an R object with the name <code>accident_2015</code> lor any name you like. This function was discussed extensively in the first tutorial and will be mentioned here only in passing.</p>
+<div id="downloading-file-from-nhtsas-ftp-site" class="section level3">
+<h3>Downloading file from NHTSA’s ftp site</h3>
+<p>We have obtained the URL for the 2013, 2014, and 2015 National FARS data from the <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHSTA’s</a> website and we will use it to download the file from the NHSTA’s ftp site.</p>
+<p>First we’ll create folders or directories to contain the zip file.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw">file.exists</span>(<span class="st">&quot;farsdata2013&quot;</span>)){ ### create folder for 2013 zip file
+        <span class="kw">dir.create</span>(<span class="st">&quot;farsdata2013&quot;</span>)
+}
+
+if(!<span class="kw">file.exists</span>(<span class="st">&quot;farsdata2014&quot;</span>)){ ### create folder for 2014 zip file
+        <span class="kw">dir.create</span>(<span class="st">&quot;farsdata2014&quot;</span>)
+}
+
+if(!<span class="kw">file.exists</span>(<span class="st">&quot;farsdata2015&quot;</span>)){ ### create folder for 2015 zip file
+        <span class="kw">dir.create</span>(<span class="st">&quot;farsdata2015&quot;</span>)
+}</code></pre></div>
+<p>Next, we will save the URL’s for files in an R object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fileurl2013 &lt;-<span class="st"> &quot;ftp://ftp.nhtsa.dot.gov/fars/2013/National/FARS2013NationalCSV.zip&quot;</span> ### URL for 2013 data
+
+fileurl2014 &lt;-<span class="st"> &quot;ftp://ftp.nhtsa.dot.gov/fars/2014/National/FARS2014NationalCSV.zip&quot;</span> ### URL for 2014 data
+
+fileurl2015 &lt;-<span class="st"> &quot;ftp://ftp.nhtsa.dot.gov/fars/2015/National/FARS2015NationalCSV.zip&quot;</span> ### URL for 2015 data</code></pre></div>
+<p>Now we download the files for the year 2013 and save it to the appropriate folder. Using the <code>unzip</code> function in R, we extract the <code>accident.csv</code> file from each of the zip files. We then read the accident.csv<code>file in R using the</code>fars_read<code>function from the</code>FARSread` package and write a new file in .csv.bz2 format in the working directory . We’ll explain in a little while why we need to do this. This may take a considerable amount of time.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(fileurl2013, <span class="dt">destfile=</span><span class="st">&quot;./farsdata2013/FARS2013NationalCSV.zip&quot;</span>) ### download file and save in farsdata2013
+
+dateDownloaded2013 &lt;-<span class="st"> </span><span class="kw">date</span>() ### recording the date and time of our download
+dateDownloaded2013
+
+<span class="kw">unzip</span>(<span class="st">&quot;./farsdata2013/FARS2013NationalCSV.zip&quot;</span>, <span class="dt">exdir =</span> <span class="st">&quot;./farsdata2013&quot;</span>, <span class="dt">files =</span> <span class="st">&quot;accident.csv&quot;</span>) ### unzip file and extract accident.csv file
+
+acc_2013 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;./farsdata2013/accident.csv&quot;</span>) ### read file into R and save as an R object called acc_2013
+
+<span class="kw">write.csv</span>(acc_2013, ### We use acc_2013 as the first argument in the function write.csv
+          <span class="dt">file =</span> <span class="st">&quot;accident_2013.csv.bz2&quot;</span>, ### create accident_2013.csv.bz2 in the working directory
+          <span class="dt">row.names =</span> <span class="ot">FALSE</span>) ### do not create a new column of rownames when you read in the file in R
+
+<span class="kw">unlink</span>(<span class="st">&quot;./farsdata2013/accident.csv&quot;</span>) ### delete accident.csv file
+
+<span class="kw">unlink</span>(<span class="st">&quot;./farsdata2013/FARS2013NationalCSV.zip&quot;</span>) ### delete FARS2013NationalCSV.zip file</code></pre></div>
+<p>Then for the 2014 FARS data…</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(fileurl2014, <span class="dt">destfile=</span><span class="st">&quot;./farsdata2014/FARS2014NationalCSV.zip&quot;</span>) ### download file and save in farsdata2014
+
+dateDownloaded2014 &lt;-<span class="st"> </span><span class="kw">date</span>() ### recording the date and time of our download
+dateDownloaded2014
+
+<span class="kw">unzip</span>(<span class="st">&quot;./farsdata2014/FARS2014NationalCSV.zip&quot;</span>, <span class="dt">exdir =</span> <span class="st">&quot;./farsdata2014&quot;</span>, <span class="dt">files =</span> <span class="st">&quot;accident.csv&quot;</span>) ### unzip file and extract accident.csv file
+
+acc_2014 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;./farsdata2014/accident.csv&quot;</span>) ### read file into R and save as an R object called acc_2014
+
+<span class="kw">write.csv</span>(acc_2014, ### We use acc_2014 as the first argument in the function write.csv
+          <span class="dt">file =</span> <span class="st">&quot;accident_2014.csv.bz2&quot;</span>, ### create accident_2014.csv.bz2 in the working directory
+          <span class="dt">row.names =</span> <span class="ot">FALSE</span>) ### do not create a new column of rownames when you read in the file in R
+
+<span class="kw">unlink</span>(<span class="st">&quot;./farsdata2014/accident.csv&quot;</span>) ### delete accident.csv file
+
+<span class="kw">unlink</span>(<span class="st">&quot;./farsdata2014/FARS2014NationalCSV.zip&quot;</span>) ### delete FARS2014NationalCSV.zip file</code></pre></div>
+<p>Then for the 2015 FARS data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(fileurl2015, <span class="dt">destfile=</span><span class="st">&quot;./farsdata2015/FARS2015NationalCSV.zip&quot;</span>) ### download file and save in farsdata2015
+
+dateDownloaded2015 &lt;-<span class="st"> </span><span class="kw">date</span>() ### recording the date and time of our download
+dateDownloaded2015
+
+<span class="kw">unzip</span>(<span class="st">&quot;./farsdata2015/FARS2015NationalCSV.zip&quot;</span>, <span class="dt">exdir =</span> <span class="st">&quot;./farsdata2015&quot;</span>, <span class="dt">files =</span> <span class="st">&quot;accident.csv&quot;</span>) ### unzip file and extract accident.csv file
+
+acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;./farsdata2015/accident.csv&quot;</span>) ### read file into R and save as an R object called acc_2015
+
+<span class="kw">write.csv</span>(acc_2015, ### We use acc_2015 as the first argument in the function write.csv
+          <span class="dt">file =</span> <span class="st">&quot;accident_2015.csv.bz2&quot;</span>, ### create accident_2015.csv.bz2 in the working directory
+          <span class="dt">row.names =</span> <span class="ot">FALSE</span>) ### do not create a new column of rownames when you read in the file in R
+
+<span class="kw">unlink</span>(<span class="st">&quot;./farsdata2015/accident.csv&quot;</span>) ### delete accident.csv file
+
+<span class="kw">unlink</span>(<span class="st">&quot;./farsdata2015/FARS2015NationalCSV.zip&quot;</span>) ### delete FARS2015NationalCSV.zip file</code></pre></div>
 </div>
 <div id="the-fars_summarize_years-function" class="section level3">
 <h3>The fars_summarize_years function</h3>
-<p>The <code>fars_summarize_years</code> function is designed to create a table that will show the number of traffic accidents for every month in a single or a number of years, provided that you have the data from the NHSTA in your working directory.</p>
-<p>It takes as input the year that the user wants to analyze. This is specially advantageous to new users in R who may not be familiar with manipulating data in order to arrive at the information they need. The FARS data has many valuables which provide a lot of information. But, if you’re only interested in comparing the number of traffic accidents by month in a particular year or several years, then the ’fars_summarize_years` can save you a lot of time and effort.</p>
-<p>To begin we must first obtain the data from the NHSTA. This can be accomplished by using your browser and downloading the data from their ftp site (the URL for the ftp site is available above) or requesting the data by phone or email. If you download the data using the ftp site, you will receive a zip file containing several <code>.csv</code> files. We are interested in the file named <code>accident.csv</code>.The data is available for each year beginning in 1975. Separate downloads will have to be made for each year of data you wish to analyze.</p>
-<p>You may unzip the file using a local software in your computer such as <code>WinRAR</code> in Windows or use the unzip function in R. After unzipping the files, it’s a good idea to change the name of the file to reflect the year the data was derived from. Changing <code>accident.csv</code> to <code>accident_2015.csv</code> will avoid confusion in case you are working with multiple years. Another reason why it’s a good idea is because you cannot keep a file with same file name in the same directory.</p>
-<p>You are now ready to use the <code>fars_read</code> function to explore the data. You might find the first vignette included in this package, “Introduction to FARSread” helpful for this purpose. Let’s load the package <code>readFARS</code> to access the <code>fars_summarize_years</code> and <code>fars_map_state</code> functions .</p>
-<p>Now that we have access to the <code>fars_summarize_function</code> and we also have our data, <code>accident_2015.csv</code>. What else do we need?</p>
-<p>Before we can use the <code>fars_summarize_function</code>, we must first read in the file <code>accident_2015.csv</code> in R, using the <code>fars_read</code> function and save the output as a variable in R.</p>
-<p>We then save that output/variable to a .csv.bz2 file. <strong>WHY?</strong> Unlike the <code>fars_read</code> function which reads into R a .csv file, the <code>fars_summarize_year</code> function requires a .csv.bz2 file to work.</p>
-<p>Fortunately, we have the <code>write.csv</code> function in R to do that. <strong>WARNING - using the <code>write.csv</code> function as shown below will create the file <code>accident_2015.csv.bz2</code> in your working directory</strong>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FARSread)
-accident_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;accident_2015.csv&quot;</span>) ### read the downoaded .csv file and save it as accident_2015
-
-<span class="kw">write.csv</span>(accident_2015, ### We use accident_2015 as the first argument in the function write.csv
-          <span class="dt">file =</span> <span class="kw">bzfile</span>(<span class="st">&quot;accident_2015.csv.bz2&quot;</span>), ### create a new file in .csv.bz2 format with the name accident_2015.csv.bz2
-          <span class="dt">row.names =</span> <span class="ot">FALSE</span>) ### do not create a new column of rownames when you read in the file in R
-
-<span class="kw">fars_summarize_years</span>(<span class="dv">2015</span>) ### The first argument to this function is the year you want to analyze. You may input as many years as you wish provided that the data for that year is available in a .csv.bnz2 format in your working directory
-<span class="co">#&gt; # A tibble: 12 x 2</span>
-<span class="co">#&gt;    MONTH `2015`</span>
-<span class="co">#&gt;  * &lt;int&gt;  &lt;int&gt;</span>
-<span class="co">#&gt;  1     1   2368</span>
-<span class="co">#&gt;  2     2   1968</span>
-<span class="co">#&gt;  3     3   2385</span>
-<span class="co">#&gt;  4     4   2430</span>
-<span class="co">#&gt;  5     5   2847</span>
-<span class="co">#&gt;  6     6   2765</span>
-<span class="co">#&gt;  7     7   2998</span>
-<span class="co">#&gt;  8     8   3016</span>
-<span class="co">#&gt;  9     9   2865</span>
-<span class="co">#&gt; 10    10   3019</span>
-<span class="co">#&gt; 11    11   2724</span>
-<span class="co">#&gt; 12    12   2781</span></code></pre></div>
+<p>The <code>fars_summarize_years</code> function is designed to create a table that will show the number of traffic accidents for every month in a single or a number of years, provided that you have the data from the NHSTA in your working directory in a .csv.bz2 format.</p>
+<p>Unlike the <code>fars_read</code> function which reads into R a .csv file or a .csv.bz2 file, the <code>fars_summarize_year</code> function requires a .csv.bz2 file to work. A .csv.bz2 file occupy less space in your hard drive, which is the reason we saved the file in this format. The .csv file of the 2015 National FARS data occupies 5.17 MB of your hard drive while the .csv.bz2 file occupies only 876 KB. A whopping difference!!!</p>
+<p>We are now ready to use the <code>fars_summarize_years</code> function It takes as input the year that the user wants to analyze. This is specially advantageous to new users in R who may not be familiar with manipulating data in order to arrive at the information they need. The FARS data has many valuables which provide a lot of information. But, if you’re only interested in comparing the number of traffic accidents by month in a particular year or several years, then the ’fars_summarize_years` can save you a lot of time and effort.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">most_months &lt;-<span class="st"> </span><span class="kw">fars_summarize_years</span>(<span class="dv">2015</span>) ### The first argument to this function is the year you want to analyze. You may input as many years as you wish provided that the data for that year is available in a .csv.bnz2 format in your working directory</code></pre></div>
 <p>the output of the <code>fars_summarize_years</code> function is a table providing a summary of the number of tracffic accidents for each month of 2015.</p>
 <p>Notice that table above is the same table we created in the first tutorial but it only took us one line of code with one argument <code>2015</code> in order to arrive at the same output. Just as an exercise we will plot the result in the same way that we did in the previous tutorial.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(forcats) ### load package forcats to change factor levels
-<span class="kw">library</span>(dplyr) ###load package dplyr to access %&gt;%  forward pipe operator
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr) ###load package dplyr to access %&gt;%  forward pipe operator
 <span class="co">#&gt; Warning: package 'dplyr' was built under R version 3.4.2</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'dplyr'</span>
@@ -141,11 +181,11 @@ accident_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<s
 <span class="kw">library</span>(ggplot2) ### load package ggplot2 for plotting data
 <span class="co">#&gt; Warning: package 'ggplot2' was built under R version 3.4.3</span>
 
-most_months &lt;-<span class="st"> </span><span class="kw">fars_summarize_years</span>(<span class="dv">2015</span>) %&gt;%<span class="st"> </span>### save the output as a variable named most_months
+most_months &lt;-<span class="st"> </span>most_months  %&gt;%<span class="st"> </span>### get the table we created called summ_months
 <span class="st">        </span><span class="kw">mutate</span>(<span class="dt">mon_abb =</span> <span class="kw">as.factor</span>(month.abb)) %&gt;%<span class="st"> </span>### create a new variable of abbreviations for month names
 <span class="st">        </span><span class="kw">as.data.frame</span>() ### save result as a data frame
 
-most_months$mon_abb &lt;-<span class="st"> </span><span class="kw">fct_relevel</span>(most_months$mon_abb, <span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>) ### change factor levels to correctly plot the data using ggplot
+most_months$mon_abb &lt;-<span class="st"> </span><span class="kw">factor</span>(most_months$mon_abb, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>)) ### assign factor levels to correctly plot the data
 
 most_months
 <span class="co">#&gt;    MONTH 2015 mon_abb</span>
@@ -162,7 +202,7 @@ most_months
 <span class="co">#&gt; 11    11 2724     Nov</span>
 <span class="co">#&gt; 12    12 2781     Dec</span>
 
-<span class="kw">colnames</span>(most_months) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;MONTH&quot;</span>, <span class="st">&quot;count&quot;</span>, <span class="st">&quot;mon_abb&quot;</span>)
+<span class="kw">colnames</span>(most_months) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;MONTH&quot;</span>, <span class="st">&quot;count&quot;</span>, <span class="st">&quot;mon_abb&quot;</span>) ### change variable name `2015` to count
 
 <span class="kw">ggplot</span>(<span class="dt">data =</span> most_months, <span class="kw">aes</span>(<span class="dt">x =</span> mon_abb, <span class="dt">y =</span> count, <span class="dt">group =</span> <span class="dv">1</span>)) +<span class="st"> </span>### select the data and variables we will plot
 <span class="st">        </span><span class="kw">geom_line</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) +<span class="st"> </span>### plot data as a line
@@ -201,7 +241,7 @@ comp_yrs &lt;-<span class="st"> </span><span class="kw">fars_summarize_years</sp
 
 comp_yrs &lt;-<span class="st"> </span>comp_yrs %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">month =</span> <span class="kw">as.factor</span>(month.abb)) ### change the numerical representation of months to abbreviations
 
-comp_yrs$month &lt;-<span class="st"> </span><span class="kw">fct_relevel</span>(comp_yrs$month, <span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>) ### change factor levels to correctly plot the data using ggplot
+comp_yrs$month &lt;-<span class="st"> </span><span class="kw">factor</span>(comp_yrs$month, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>)) ### assign factor levels to correctly plot the data
 
 <span class="kw">library</span>(tidyr) ### load package tidyr so we can access the function gather()
 <span class="co">#&gt; Warning: package 'tidyr' was built under R version 3.4.3</span>
@@ -311,7 +351,7 @@ long_comp_yrs &lt;-<span class="st"> </span><span class="kw">gather</span>(comp_
 <p>We can also add some features to improve the maps readability by adding a few more information. Here we re-examine the the State of Texas and add some features to easily identify certain areas of the map. This becomes handy during presentation to highlight which areas are being referred to in the map.</p>
 <p>But before we can plot the results, we first have to find the relative centers where most of the accidents occured. We will first find which County in Texas has the most number of recorded traffic accidents and then find their relative position based on the geospatial location provided in the FARS data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;accident_2015.csv&quot;</span>) ### read in the FARS data for 2015
+acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;accident_2015.csv.bz2&quot;</span>) ### read in the FARS data for 2015
 
 texas &lt;-<span class="st"> </span>acc_2015 %&gt;%<span class="st"> </span>### 2015 FARS data
 <span class="st">        </span><span class="kw">filter</span>(STATE ==<span class="st"> </span><span class="dv">48</span>) %&gt;%<span class="st"> </span>### limit our analysis to the State of Texas

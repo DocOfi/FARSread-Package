@@ -58,7 +58,7 @@ dateDownloaded2015
 
 unzip("./farsdata2015/FARS2015NationalCSV.zip", exdir = "./farsdata2015", files = "accident.csv") ### unzip file and extract accident.csv file
 
-acc_2015 <- fars_read("./farsdata2015/accident.csv") ### read file into R and save as an R object called accident_2015
+acc_2015 <- fars_read("./farsdata2015/accident.csv") ### read file into R and save as an R object called acc_2015
 ```
 
 We have read `accident.csv` from the zip file we downloaded. We assigned it to an R object named `acc_2015`. But before we can start analyzing the data, we need to do some housekeeping chores.   
