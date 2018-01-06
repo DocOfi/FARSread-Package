@@ -43,8 +43,8 @@
 #' indicating traffics fatalities occurred.
 #'
 #' @examples
-#' \dontrun{fars_map_state(2, 2013)}
-#' \dontrun{fars_map_state(2000, 2013)}
+#' \donttest{fars_map_state(2, 2013)}
+#' \donttest{fars_map_state(2000, 2013)}
 #'
 #' @export
 fars_map_state <- function(state.num, year) {
