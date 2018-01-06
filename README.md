@@ -23,7 +23,7 @@ Interested parties may access data tables at [NHTSA](www-fars.nhtsa.dot.gov/Main
 
 The family of functions available in this package will allow the user to read and analyze the data in R. The summary tables provided by the function `fars _summarize_years` shows the number of observed accidents per month in a particular year.
 
-### Data visualiztion
+### Data visualization
 
 The package provides a function `fars_map_state`,that allows the user to visualize the location of accidents in a particular State in a particular year.  The output of the function is a map plot based on the longitude and latitude data in FARS.
 
