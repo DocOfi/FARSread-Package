@@ -12,7 +12,7 @@
 
 <meta name="author" content="Edmund julian L Ofilada" />
 
-<meta name="date" content="2018-01-06" />
+<meta name="date" content="2018-01-07" />
 
 <title>Introduction to FARSread</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to FARSread</h1>
 <h4 class="author"><em>Edmund julian L Ofilada</em></h4>
-<h4 class="date"><em>2018-01-06</em></h4>
+<h4 class="date"><em>2018-01-07</em></h4>
 
 
 
@@ -102,7 +102,7 @@ dateDownloaded2015
 
 <span class="kw">unzip</span>(<span class="st">&quot;./farsdata2015/FARS2015NationalCSV.zip&quot;</span>, <span class="dt">exdir =</span> <span class="st">&quot;./farsdata2015&quot;</span>, <span class="dt">files =</span> <span class="st">&quot;accident.csv&quot;</span>) ### unzip file and extract accident.csv file
 
-acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;./farsdata2015/accident.csv&quot;</span>) ### read file into R and save as an R object called accident_2015</code></pre></div>
+acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;./farsdata2015/accident.csv&quot;</span>) ### read file into R and save as an R object called acc_2015</code></pre></div>
 <p>We have read <code>accident.csv</code> from the zip file we downloaded. We assigned it to an R object named <code>acc_2015</code>. But before we can start analyzing the data, we need to do some housekeeping chores.</p>
 <p>Zip files from ftp site of the <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a> all contain the <code>accident.csv</code> file. So if you downloaded several years of FARS data it might becoming confusing which file is from which year. Furthermore, the .csv file takes up a lot of space on your hard drive. We can compress this file and save it in a .csv.bz2 format to lessen the file size. <strong>WARNING!!!</strong> The next chunk of codes will create a file in your working directory.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write.csv</span>(acc_2015, ### from the R object acc_2015 
@@ -302,6 +302,7 @@ most_months
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">most_months$mon_abb &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>), <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>)) ### assign factor levels to correctly plot the data
 
 <span class="kw">library</span>(ggplot2) ### load ggplot2 package for plotting data
+<span class="co">#&gt; Warning: package 'ggplot2' was built under R version 3.4.3</span>
 <span class="kw">ggplot</span>(<span class="dt">data =</span> most_months, <span class="kw">aes</span>(<span class="dt">x =</span> mon_abb, <span class="dt">y =</span> count, <span class="dt">group =</span> <span class="dv">1</span>)) +<span class="st"> </span>### select the data and variables we will plot
 <span class="st">        </span><span class="kw">geom_line</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) +<span class="st"> </span>### plot data as a line
 <span class="st">        </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">fill =</span> <span class="st">&quot;green&quot;</span>) +<span class="st"> </span>### plot data as green round points as well
@@ -316,7 +317,7 @@ most_months
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FARSread)
 <span class="kw">head</span>(fars_2015)</code></pre></div>
 <p>Raw data from the year 2013 is also available with this package. You may access them like so:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fars_2013 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;accident_2013.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FARSread&quot;</span>) ### find the file path 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fars_2013 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;accident_2013.csv.bz2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FARSread&quot;</span>) ### find the file path 
 
 <span class="kw">library</span>(FARSread) ### load package FARSread to access functions from the package
 

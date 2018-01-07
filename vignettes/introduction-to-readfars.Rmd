@@ -208,7 +208,7 @@ head(fars_2015)
 Raw data from the year 2013 is also available with this package. You may access them like so:
 
 ```{r rawfars2013dta, echo=TRUE, eval=FALSE}
-fars_2013 <- system.file("extdata", "accident_2013.csv", package = "FARSread") ### find the file path 
+fars_2013 <- system.file("extdata", "accident_2013.csv.bz2", package = "FARSread") ### find the file path 
 
 library(FARSread) ### load package FARSread to access functions from the package
 
