@@ -76,7 +76,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <div id="package-farsread" class="section level2">
 <h2>Package FARSread</h2>
-<p>Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a>. This document will familiarize the reader with the <code>fars_summarize_years</code> function and the <code>The fars_map_state</code> function from the package readFARS.</p>
+<p>Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a>. This document will familiarize the reader with the <code>fars_summarize_years</code> function and the <code>The fars_map_state</code> function from the package readFARS. it will also provide an example of how to download different years of FARS data from the <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHTSA</a>.</p>
 <p>This is the second vignette for the package FARSread. The first one entitled “Introduction to FARSread” familiarizes the reader with the function <code>fars_read</code> which reads the FARS data from the NHSTA into R. If you haven’t read it yet, we advise that you read it before proceeding with this second tutorial.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FARSread) ###load package FARSread so we can use the fars_summarize_years function and the the fars_map_state function</code></pre></div>
 <div id="data-fars2015" class="section level3">
@@ -86,7 +86,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="downloading-file-from-nhtsas-ftp-site" class="section level3">
 <h3>Downloading file from NHTSA’s ftp site</h3>
-<p>For this tutorial we will be comparing the FARS data for the years 2013, 2014, AND 2015. We have obtained the URL for the 2013, 2014, and 2015 National FARS data from the <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHSTA’s</a> website and we will use it to download the file from the NHSTA’s ftp site.</p>
+<p>For this tutorial we will be comparing the FARS data for the years 2013, 2014, and 2015. We have obtained the URL for the 2013, 2014, and 2015 National FARS data from the <a href="www-fars.nhtsa.dot.gov/Main/index.aspx">NHSTA’s</a> website and we will use it to download the file from the NHSTA’s ftp site.</p>
 <p>First we’ll create folders or directories to contain the zip file.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw">file.exists</span>(<span class="st">&quot;farsdata2013&quot;</span>)){ ### create folder for 2013 zip file
         <span class="kw">dir.create</span>(<span class="st">&quot;farsdata2013&quot;</span>)
@@ -156,6 +156,20 @@ acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span c
 <span class="kw">unlink</span>(<span class="st">&quot;./farsdata2015/accident.csv&quot;</span>) ### delete accident.csv file
 
 <span class="kw">unlink</span>(<span class="st">&quot;./farsdata2015/FARS2015NationalCSV.zip&quot;</span>) ### delete FARS2015NationalCSV.zip file</code></pre></div>
+<p>At this point all the codes you have seen so far can be used interactively on the console pane of R studio. The codes for downloading data from NHTSA were presented here to give the reader the freedom to choose whichever year of the FARS data he/she wishes to analyze.</p>
+<p>If you want to run the <code>functions-readfars.Rmd</code> file from this repository, you’ll have to set the arguments <code>eval = FALSE</code> to <code>eval = TRUE</code> in all the code chunks prior to this note. It was set to FALSE because it took too long to run the vignettes everytime the package is tested during development.</p>
+<p>Since the FARS data for 2013 to 2015 is included in this package, I will now show you how to access them from your directory. The data can be accessed for use using the <code>system.file</code> function in R.</p>
+</div>
+<div id="accessing-the-2013-to-2015-fars-data" class="section level3">
+<h3>Accessing the 2013 to 2015 FARS data</h3>
+<p>The function <code>system.file</code> is the key that will allow us to gain access to the 2013 to 2015 data within the package. Let’s begin with the 2015 data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### the following code reads access the accident_2015.csv.bz2 file in the folder extdata in package FARSread and save it as an R object named fars_2015
+fars_2015 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;accident_2015.csv.bz2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FARSread&quot;</span>)
+
+### copy the file from its folder and save it to the working directory
+<span class="kw">file.copy</span>(<span class="dt">from =</span> fars_2015, <span class="dt">to =</span> <span class="kw">getwd</span>()) 
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<p>Now, we are ready to use the <code>fars_summarize_years</code> function.</p>
 </div>
 <div id="the-fars_summarize_years-function" class="section level3">
 <h3>The fars_summarize_years function</h3>
@@ -163,7 +177,7 @@ acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span c
 <p>Unlike the <code>fars_read</code> function which reads into R a .csv file or a .csv.bz2 file, the <code>fars_summarize_year</code> function requires a .csv.bz2 file to work. A .csv.bz2 file occupy less space in your hard drive, which is the reason we saved the file in this format. The .csv file of the 2015 National FARS data occupies 5.17 MB of your hard drive while the .csv.bz2 file occupies only 876 KB. A whopping difference!!!</p>
 <p>We are now ready to use the <code>fars_summarize_years</code> function It takes as input the year that the user wants to analyze. This is specially advantageous to new users in R who may not be familiar with manipulating data in order to arrive at the information they need. The FARS data has many valuables which provide a lot of information. But, if you’re only interested in comparing the number of traffic accidents by month in a particular year or several years, then the ’fars_summarize_years` can save you a lot of time and effort.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">most_months &lt;-<span class="st"> </span><span class="kw">fars_summarize_years</span>(<span class="dv">2015</span>) ### The first argument to this function is the year you want to analyze. You may input as many years as you wish provided that the data for that year is available in a .csv.bnz2 format in your working directory</code></pre></div>
-<p>the output of the <code>fars_summarize_years</code> function is a table providing a summary of the number of tracffic accidents for each month of 2015.</p>
+<p>The output of the <code>fars_summarize_years</code> function is a table providing a summary of the number of tracffic accidents for each month of 2015.</p>
 <p>Notice that table above is the same table we created in the first tutorial but it only took us one line of code with one argument <code>2015</code> in order to arrive at the same output. Just as an exercise we will plot the result in the same way that we did in the previous tutorial.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr) ###load package dplyr to access %&gt;%  forward pipe operator
 <span class="co">#&gt; Warning: package 'dplyr' was built under R version 3.4.2</span>
@@ -214,9 +228,21 @@ most_months
 <p class="caption">fig. 1</p>
 </div>
 <p>The plot shows the peak months for traffic accidents in 2015 were from July to October.</p>
-<p>If we wanted to compare the months in the years: 2013, 2014, and 2015, we should have done:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fars_summarize_years</span>(<span class="kw">c</span>(<span class="dv">2013</span>, <span class="dv">2014</span>, <span class="dv">2015</span>))</code></pre></div>
-<p>That would have given us the same output as the table above but with additional columns for the year 2013 and 2014. This will only work however, if the data for those years are available in your working directory in a .csv.bz2 file format.</p>
+<p>If we wanted to compare the months in the years: 2013, 2014, and 2015, we first have to access the FARS data for 2013 and 2014 within the package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### the following code reads access the accident_2013.csv.bz2 file in the folder extdata in package FARSread and save it as an R object named fars_2015
+fars_2013 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;accident_2013.csv.bz2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FARSread&quot;</span>)
+
+### copy the file from its folder and save it to the working directory
+<span class="kw">file.copy</span>(<span class="dt">from =</span> fars_2013, <span class="dt">to =</span> <span class="kw">getwd</span>()) 
+<span class="co">#&gt; [1] FALSE</span>
+
+### the following code reads access the accident_2013.csv.bz2 file in the folder extdata in package FARSread and save it as an R object named fars_2015
+fars_2014 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;accident_2014.csv.bz2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FARSread&quot;</span>)
+
+### copy the file from its folder and save it to the working directory
+<span class="kw">file.copy</span>(<span class="dt">from =</span> fars_2014, <span class="dt">to =</span> <span class="kw">getwd</span>())
+<span class="co">#&gt; [1] FALSE</span></code></pre></div>
+<p>NOw, we are ready to summarize the FARS data from 2013 to 2015.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fars_summarize_years</span>(<span class="kw">c</span>(<span class="dv">2013</span>, <span class="dv">2014</span>, <span class="dv">2015</span>)) ### The first argument to this function are the years 2013, 2014, and 2015. You may input as many years as you wish provided that the data for that year is available in a .csv.bnz2 format in your working directory
 <span class="co">#&gt; # A tibble: 12 x 4</span>
 <span class="co">#&gt;    MONTH `2013` `2014` `2015`</span>
@@ -349,8 +375,7 @@ long_comp_yrs &lt;-<span class="st"> </span><span class="kw">gather</span>(comp_
 <p>Looking at these plots of Georgia, we can see there was an increase in the number of traffic accidents in Georgia from 2013 to 2015 even without looking at the numbers or a table. It also shows the the increase did not happen just in selected areas, but rather appears to have occured throughout the State. Compared to numbers or tables, plots have the advantage of conveying more information at a glance.</p>
 <p>We can also add some features to improve the maps readability by adding a few more information. Here we re-examine the the State of Texas and add some features to easily identify certain areas of the map. This becomes handy during presentation to highlight which areas are being referred to in the map.</p>
 <p>But before we can plot the results, we first have to find the relative centers where most of the accidents occured. We will first find which County in Texas has the most number of recorded traffic accidents and then find their relative position based on the geospatial location provided in the FARS data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;accident_2015.csv.bz2&quot;</span>) ### read in the FARS data for 2015
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;accident_2015.csv.bz2&quot;</span>) ### read in the FARS data for 2015
 
 texas &lt;-<span class="st"> </span>acc_2015 %&gt;%<span class="st"> </span>### 2015 FARS data
 <span class="st">        </span><span class="kw">filter</span>(STATE ==<span class="st"> </span><span class="dv">48</span>) %&gt;%<span class="st"> </span>### limit our analysis to the State of Texas
@@ -419,6 +444,17 @@ county113 ### gives relative position where accidents happen most in County 133
 </div>
 <p>It turns out, Texas County 113 is <strong>Dallas County</strong> and Texas County 201 is <strong>Harris County</strong>.</p>
 <p>By providing features like circles, squares, dots or even arrows, we can improve how we convey information to our listeners during presentations.</p>
+<p>Before we end, let’s get read of the copy of the files we copied from the system directory to the working directory.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.remove</span>(<span class="st">&quot;./accident_2015.csv.bz2&quot;</span>)
+<span class="co">#&gt; [1] TRUE</span>
+<span class="kw">file.remove</span>(<span class="st">&quot;./accident_2015.csv.bz2&quot;</span>)
+<span class="co">#&gt; Warning in file.remove(&quot;./accident_2015.csv.bz2&quot;): cannot remove file './</span>
+<span class="co">#&gt; accident_2015.csv.bz2', reason 'No such file or directory'</span>
+<span class="co">#&gt; [1] FALSE</span>
+<span class="kw">file.remove</span>(<span class="st">&quot;./accident_2015.csv.bz2&quot;</span>)
+<span class="co">#&gt; Warning in file.remove(&quot;./accident_2015.csv.bz2&quot;): cannot remove file './</span>
+<span class="co">#&gt; accident_2015.csv.bz2', reason 'No such file or directory'</span>
+<span class="co">#&gt; [1] FALSE</span></code></pre></div>
 <p>I hope you found our short demonstration of the package readFARS entertaining as well as educational and may the use of the functions in these package facilitate your analysis of the FARS data.</p>
 </div>
 <div id="appendix" class="section level3">

@@ -116,7 +116,11 @@ acc_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span c
 <div id="reading-the-data-in-r-the-fars_read-function" class="section level3">
 <h3>Reading the data in R: The fars_read function</h3>
 <p>We already used the <code>fars_read</code> function earlier to read the <code>accident.csv</code> file from the zip file. We will now use the same function to read the <code>accident2015.csv.bz2</code> file we created to demonstrate the versatility of this function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">accident_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(<span class="st">&quot;accident_2015.csv.bz2&quot;</span>) ### read accident2015.csv.bz2 file into R and save as an R object called accident_2015</code></pre></div>
+<p>At this point all the codes you have seen so far can be used interactively on the console pane of R studio. If you want to run the <code>introduction-to-readfars.Rmd</code> file from this repository, you’ll have to set the arguments <code>eval = FALSE</code> to <code>eval = TRUE</code> in all the code chunks prior to this note. we had to set them to FALSE as it took to long to run the vignettes everytime the package is tested during development.</p>
+<p>Since the FARS data for 2015 is included in this package, I will now show you how to access them from your directory. The data can be accessed for use using the <code>system.file</code> function in R.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fars_2015 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;accident_2015.csv.bz2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FARSread&quot;</span>) ### find the file path 
+
+accident_2015 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(fars_2015) ### read accident2015.csv.bz2 file into R and save as an R object called accident_2015</code></pre></div>
 </div>
 <div id="looking-at-the-variables-in-our-data" class="section level3">
 <h3>Looking at the variables in our data</h3>
@@ -302,7 +306,6 @@ most_months
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">most_months$mon_abb &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>), <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>)) ### assign factor levels to correctly plot the data
 
 <span class="kw">library</span>(ggplot2) ### load ggplot2 package for plotting data
-<span class="co">#&gt; Warning: package 'ggplot2' was built under R version 3.4.3</span>
 <span class="kw">ggplot</span>(<span class="dt">data =</span> most_months, <span class="kw">aes</span>(<span class="dt">x =</span> mon_abb, <span class="dt">y =</span> count, <span class="dt">group =</span> <span class="dv">1</span>)) +<span class="st"> </span>### select the data and variables we will plot
 <span class="st">        </span><span class="kw">geom_line</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) +<span class="st"> </span>### plot data as a line
 <span class="st">        </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">fill =</span> <span class="st">&quot;green&quot;</span>) +<span class="st"> </span>### plot data as green round points as well
@@ -313,15 +316,16 @@ most_months
 <p class="caption">fig. 2</p>
 </div>
 <p>We see that the peak months for traffic accidents are the months from July to october. The package FARSread has other functions which will be demonstrated on the second vignette included in this package. Among those functions is a function that creates a map plot of a State with the location of the traffic accidents shown as points in the map.</p>
-<p>To gain a better understanding of the data in FARS we have provided below a brief description of the variables in the appendix at the bottom of this page. For a detailed description of the variables in the data you can download a copy of the pdf file <strong>Fatality Analysis Reporting System (FARS) Analytical User’s Manual 1975-2016</strong> available from the website <a href="https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447" class="uri">https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447</a>. You can view the first 6 rows of the FARS data from 2015 in R on the console by typing the following:</p>
+<p>To gain a better understanding of the data in FARS we have provided below a brief description of the variables in the 2015 FARS data. You’ll find it in the appendix at the bottom of this page. For a detailed description of the variables in the data you can download a copy of the pdf file <strong>Fatality Analysis Reporting System (FARS) Analytical User’s Manual 1975-2016</strong> available from the website <a href="https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447" class="uri">https://crashstats.nhtsa.dot.gov/Api/Public/Publication/812447</a>.</p>
+<p>You can also view the FARS data from 2015 in R without having to use the <code>system.file</code> function. We have read the file in R for you and saved it in an R object called fars_2015. You can access the first 6 rows of the data by typing the following on the console pane in R Studio:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FARSread)
-<span class="kw">head</span>(fars_2015)</code></pre></div>
-<p>Raw data from the year 2013 is also available with this package. You may access them like so:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fars_2013 &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;accident_2013.csv.bz2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FARSread&quot;</span>) ### find the file path 
-
-<span class="kw">library</span>(FARSread) ### load package FARSread to access functions from the package
-
-accident_2013 &lt;-<span class="st"> </span><span class="kw">fars_read</span>(fars_2013)</code></pre></div>
+<span class="kw">head</span>(fars_2015, <span class="dv">6</span>)</code></pre></div>
+<p>Raw data for the year 2013 and 2014 in .csv.bz2 format are also available with this package. You may access them like in the demonstration above using the <code>system.file</code> function.</p>
+<p>Before we end, let’s get read of the copy of the <code>accident_2015.csv.bz2</code> in our working directory since we already have a copy within the package which we can access anytime.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.remove</span>(<span class="st">&quot;./accident_2015.csv.bz2&quot;</span>)
+<span class="co">#&gt; Warning in file.remove(&quot;./accident_2015.csv.bz2&quot;): cannot remove file './</span>
+<span class="co">#&gt; accident_2015.csv.bz2', reason 'No such file or directory'</span>
+<span class="co">#&gt; [1] FALSE</span></code></pre></div>
 <p>This ends the first part of the tutorial for the package FARSread. For the second tutorial, “Other functions in FARSread” we will be demonstrating the use of the function <code>fars_summarize_years</code> function and the <code>fars-map_state</code> function.</p>
 <p>The <code>fars_summarize_years</code> function is designed to facilitate creating a table that will show the number of traffic accidents for every month in a single or a number of years. Similar to the table we created above, but with less effort on your part. The <code>fars-map_state</code> function create a map plot using geospatial locationing to plot the location where the accidents occured in a particular State.</p>
 <p>We hope that you enjoyed our short presentation.</p>

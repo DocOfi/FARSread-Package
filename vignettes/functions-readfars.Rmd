@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 ## Package FARSread
 
-Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). This document will familiarize the reader with the `fars_summarize_years` function and the `The fars_map_state` function from the package readFARS.
+Package FARSread was designed to make it easy for R users to summarize and visualize the Fatality Analysis Reporting System or FARS data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). This document will familiarize the reader with the `fars_summarize_years` function and the `The fars_map_state` function from the package readFARS. it will also provide an example of how to download different years of FARS data from the [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx).
 
 This is the second vignette for the package FARSread.  The first one entitled "Introduction to FARSread" familiarizes the reader with the function `fars_read` which reads the FARS data from the NHSTA into R.  If you haven't read it yet, we advise that you read it before proceeding with this second tutorial.
 
@@ -38,7 +38,7 @@ Interested parties may access data tables at [NHTSA](www-fars.nhtsa.dot.gov/Main
 
 ### Downloading file from NHTSA's ftp site
 
-For this tutorial we will be comparing the FARS data for the years 2013, 2014, AND 2015. We have obtained the URL for the 2013, 2014, and 2015 National FARS data from the [NHSTA's](www-fars.nhtsa.dot.gov/Main/index.aspx) website and we will use it to download the file from the NHSTA's ftp site. 
+For this tutorial we will be comparing the FARS data for the years 2013, 2014, and 2015. We have obtained the URL for the 2013, 2014, and 2015 National FARS data from the [NHSTA's](www-fars.nhtsa.dot.gov/Main/index.aspx) website and we will use it to download the file from the NHSTA's ftp site. 
 
 First we'll create folders or directories to contain the zip file.  
 
@@ -130,6 +130,26 @@ unlink("./farsdata2015/accident.csv") ### delete accident.csv file
 unlink("./farsdata2015/FARS2015NationalCSV.zip") ### delete FARS2015NationalCSV.zip file
 ```
 
+At this point all the codes you have seen so far can be used interactively on the console pane of R studio. The codes for downloading data from NHTSA were presented here to give the reader the freedom to choose whichever year of the FARS data he/she wishes to analyze.
+
+If you want to run the `functions-readfars.Rmd` file from this repository, you'll have to set the arguments `eval = FALSE` to `eval = TRUE` in all the code chunks prior to this note. It was set to FALSE because it took too long to run the vignettes everytime the package is tested during development. 
+
+Since the FARS data for 2013 to 2015 is included in this package, I will now show you how to access them from your directory. The data can be accessed for use using the `system.file` function in R.  
+
+###Accessing the 2013 to 2015 FARS data
+
+The function `system.file` is the key that will allow us to gain access to the 2013 to 2015 data within the package. Let's begin with the 2015 data.
+
+```{r accessfarsdat}
+### the following code reads access the accident_2015.csv.bz2 file in the folder extdata in package FARSread and save it as an R object named fars_2015
+fars_2015 <- system.file("extdata", "accident_2015.csv.bz2", package = "FARSread")
+
+### copy the file from its folder and save it to the working directory
+file.copy(from = fars_2015, to = getwd()) 
+```
+
+Now, we are ready to use the `fars_summarize_years` function.
+
 ### The fars_summarize_years function
 
 The `fars_summarize_years` function is designed to create a table that will show the number of traffic accidents for every month in a single or a number of years, provided that you have the data from the NHSTA in your working directory in a .csv.bz2 format.  
@@ -142,7 +162,7 @@ We are now ready to use the `fars_summarize_years` function It takes as input th
 most_months <- fars_summarize_years(2015) ### The first argument to this function is the year you want to analyze. You may input as many years as you wish provided that the data for that year is available in a .csv.bnz2 format in your working directory
 ```
 
-the output of the `fars_summarize_years` function is a table providing a summary of the number of tracffic accidents for each month of 2015.  
+The output of the `fars_summarize_years` function is a table providing a summary of the number of tracffic accidents for each month of 2015.  
 
 Notice that table above is the same table we created in the first tutorial but it only took us one line of code with one argument `2015` in order to arrive at the same output. Just as an exercise we will plot the result in the same way that we did in the previous tutorial. 
 
@@ -169,13 +189,23 @@ ggplot(data = most_months, aes(x = mon_abb, y = count, group = 1)) + ### select 
 
 The plot shows the peak months for traffic accidents in 2015 were from July to October.
 
-If we wanted to compare the months in the years: 2013, 2014, and 2015, we should have done:
+If we wanted to compare the months in the years: 2013, 2014, and 2015, we first have to access the FARS data for 2013 and 2014 within the package.
 
-```{r multyrs, echo=TRUE, eval=FALSE}
-fars_summarize_years(c(2013, 2014, 2015))
+```{r accessfarsdat2}
+### the following code reads access the accident_2013.csv.bz2 file in the folder extdata in package FARSread and save it as an R object named fars_2015
+fars_2013 <- system.file("extdata", "accident_2013.csv.bz2", package = "FARSread")
+
+### copy the file from its folder and save it to the working directory
+file.copy(from = fars_2013, to = getwd()) 
+
+### the following code reads access the accident_2013.csv.bz2 file in the folder extdata in package FARSread and save it as an R object named fars_2015
+fars_2014 <- system.file("extdata", "accident_2014.csv.bz2", package = "FARSread")
+
+### copy the file from its folder and save it to the working directory
+file.copy(from = fars_2014, to = getwd())
 ```
 
-That would have given us the same output as the table above but with additional columns for the year 2013 and 2014. This will only work however, if the data for those years are available in your working directory in a .csv.bz2 file format.
+NOw, we are ready to summarize the FARS data from 2013 to 2015.
 
 ```{r manyyears}
 fars_summarize_years(c(2013, 2014, 2015)) ### The first argument to this function are the years 2013, 2014, and 2015. You may input as many years as you wish provided that the data for that year is available in a .csv.bnz2 format in your working directory
@@ -307,7 +337,6 @@ We can also add some features to improve the maps readability by adding a few mo
 But before we can plot the results, we first have to find the relative centers where most of the accidents occured.  We will first find which County in Texas has the most number of recorded traffic accidents and then find their relative position based on the geospatial location provided in the FARS data.
 
 ```{r conflpoints}
-
 acc_2015 <- fars_read("accident_2015.csv.bz2") ### read in the FARS data for 2015
 
 texas <- acc_2015 %>% ### 2015 FARS data
@@ -366,6 +395,14 @@ mtext("Map Plot of Traffic Accidents Using Geospatial Locationing", ### title to
 It turns out, Texas County 113 is **Dallas County** and Texas County 201 is **Harris County**.
 
 By providing features like circles, squares, dots or even arrows, we can improve how we convey information to our listeners during presentations.
+
+Before we end, let's get read of the copy of the files we copied from the system directory to the working directory.
+
+```{r deldat}
+file.remove("./accident_2015.csv.bz2")
+file.remove("./accident_2015.csv.bz2")
+file.remove("./accident_2015.csv.bz2")
+```
 
 I hope you found our short demonstration of the package readFARS entertaining as well as educational and may the use of the functions in these package facilitate your analysis of the FARS data. 
 
