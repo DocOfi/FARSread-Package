@@ -33,6 +33,7 @@
 #'  observation that was recorded for a particular month of that year.
 #'
 fars_read_years <- function(years) {
+        MONTH <- NULL
         lapply(years, function(year) {
                 file <- make_filename(year)
                 tryCatch({
