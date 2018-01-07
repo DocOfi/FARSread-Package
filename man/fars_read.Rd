@@ -20,8 +20,8 @@ an R object of class "tbl_df", "tbl", "data.frame".
   installed.
 }
 \examples{
-\dontrun{fars_read("accident_2013.csv")}
-\dontrun{fars_read("accident_2014.csv")}
-\dontrun{fars_read("accident_2015.csv")}
+\donttest{fars_read("accident_2013.csv")}
+\donttest{fars_read("accident_2014.csv")}
+\donttest{fars_read("accident_2015.csv")}
 
 }

@@ -40,11 +40,8 @@
 #'   avaiable, summarizing the number of observations recorded each month per year.
 #'
 #' @examples
-#' \donttest{fars_summarize_years(c(2013, 2014, 2015))} ### returns a data frame
-#'   containing the variables MONTH and year that data is available.
-#' \donttest{fars_summarize_years(c(2013, 2014, "nineteen ninety two"))} ### returns a list
-#'   of data frames containing the variable MONTH and year for the year 2013 and 2014
-#'   and an error indicating that "nineteen ninety two" is an invalid request.
+#' \donttest{fars_summarize_years(c(2013, 2014, 2015))}
+#' \dontrun{fars_summarize_years(c(2013, 2014, "nineteen ninety two"))}
 #'
 #' @export
 fars_summarize_years <- function(years) {

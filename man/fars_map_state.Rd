@@ -34,8 +34,8 @@ In case the chosen numerical vector does not correspond to a particular
   particular year or state, a message will appear stating there are no accidents to plot.
 }
 \examples{
-\dontrun{fars_map_state(2, 2013)}
-\dontrun{fars_map_state(2000, 2013)}
+\donttest{fars_map_state(2, 2013)}
+\donttest{fars_map_state(2000, 2013)}
 
 }
 \seealso{
