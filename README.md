@@ -1,5 +1,5 @@
 ---
-title: "Package FARSread"
+title: "Package readFARS"
 author: "DocOfi"
 date: "March 26, 2017"
 output: 
@@ -11,6 +11,7 @@ output:
     toc: yes
 ---
 
+
 ## Package FARSread
 
 [![Build Status](https://travis-ci.org/DocOfi/FARSread-Package.svg?branch=master)](https://travis-ci.org/DocOfi/FARSread-Package)
@@ -21,11 +22,19 @@ Interested parties may access data tables at [NHTSA](www-fars.nhtsa.dot.gov/Main
 
 ### Summary tables
 
-The family of functions available in this package will allow the user to read and analyze the data in R. The summary tables provided by the function `fars _summarize_years` shows the number of observed accidents per month in a particular year.
+The family of functions available in this package will allow the user to read and analyze the data in R. The summary tables provided by the function `fars _summarize_years` shows the number of observed accidents per month in a particular year. The resulting table can then be plotted.
+
+
+![](mostAcc.png)
+
 
 ### Data visualization
 
 The package provides a function `fars_map_state`,that allows the user to visualize the location of accidents in a particular State in a particular year.  The output of the function is a map plot based on the longitude and latitude data in FARS.
+
+
+![](mostAccStates.png)
+
 
 ### File format
 
@@ -40,9 +49,8 @@ write.csv(R_variable, file = bzfile("file_name.csv.bz2"), row.names = FALSE)
 
 To view the html files in the vignettes folder, click on the following links:
 
-[introduction-to-readfars](https://htmlpreview.github.io/?https://github.com/DocOfi/FARSread-Package/blob/master/vignettes/introduction-to-readfars.html)       
+[introduction-to-FARSread](https://htmlpreview.github.io/?https://github.com/DocOfi/FARSread-Package/blob/master/vignettes/introduction-to-readfars.html)       
 
 
-[functions-readfars](https://htmlpreview.github.io/?https://github.com/DocOfi/FARSread-Package/blob/master/vignettes/functions-readfars.html)
-
+[Farsread_Functions](https://htmlpreview.github.io/?https://github.com/DocOfi/FARSread-Package/blob/master/vignettes/functions-readfars.html)
 
