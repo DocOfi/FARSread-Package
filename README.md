@@ -16,6 +16,8 @@ output:
 
 [![Build Status](https://travis-ci.org/DocOfi/FARSread-Package.svg?branch=master)](https://travis-ci.org/DocOfi/FARSread-Package)
 
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/DocOfi/FARSread-Package?branch=master&svg=true)](https://ci.appveyor.com/project/DocOfi/FARSread-Package)
+
 The goal of this package is to create a summary and visualization of the Fatality Analysis Reporting System (FARS) data from the National Highway Traffic Safety Administration [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx). FARS contains data derived from a census of fatal motor vehicle traffic crashes within the 50 States, the District of Columbia, and Puerto Rico. 
 
 Interested parties may access data tables at [NHTSA](www-fars.nhtsa.dot.gov/Main/index.aspx), download files via FTP at ftp://ftp.nhtsa.dot.gov/fars/, or make requests through the [Publications and Data Requests page](www-nrd.nhtsa.dot.gov/Cats/Index.aspx). Information requests can also be made by phone at 800-934-8517, or by e-mail at ncsaweb@dot.gov. 

@@ -5,3 +5,4 @@
 ^\.travis\.yml$
 ^\mostAcc\.png$
 ^\mostAccStates\.png$
+^appveyor\.yml$
