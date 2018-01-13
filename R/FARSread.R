@@ -11,7 +11,4 @@
 #' @docType package
 #'
 #' @name FARSread
-#'
-#' @importFrom magrittr %>%
-"_PACKAGE"
-#> [1] "_PACKAGE"
+NULL
