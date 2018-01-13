@@ -3,7 +3,6 @@
 \docType{package}
 \name{FARSread}
 \alias{FARSread}
-\alias{FARSread-package}
 \title{Facilitate summary and visualization of Fatality Analysis Reporting System (FARS) data}
 \description{
 FARSread package allows you to create monthly summary tables of accidents per year and
