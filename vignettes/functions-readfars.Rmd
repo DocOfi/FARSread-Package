@@ -399,8 +399,8 @@ By providing features like circles, squares, dots or even arrows, we can improve
 Before we end, let's get read of the copy of the files we copied from the system directory to the working directory.
 
 ```{r deldat}
-file.remove("./accident_2015.csv.bz2")
-file.remove("./accident_2015.csv.bz2")
+file.remove("./accident_2013.csv.bz2")
+file.remove("./accident_2014.csv.bz2")
 file.remove("./accident_2015.csv.bz2")
 ```
 
