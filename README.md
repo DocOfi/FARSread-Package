@@ -1,5 +1,5 @@
 ---
-title: "Package readFARS"
+title: "Package FARSread"
 author: "DocOfi"
 date: "March 26, 2017"
 output: 
@@ -55,4 +55,11 @@ To view the html files in the vignettes folder, click on the following links:
 
 
 [Farsread_Functions](https://htmlpreview.github.io/?https://github.com/DocOfi/FARSread-Package/blob/master/vignettes/functions-readfars.html)
+
+> *“Because Traffic has a memory. It’s Amazing!!! It’s like a living organism”* 
+
+> >  - Ethan Hunt, Mission Impossible
+
+<img src="https://static.businessinsider.com/image/551eafdeeab8eaee7ca43755/image.jpg" alt="Because Traffic has a memory. It’s Amazing!!! It’s like a living organism” - Ethan Hunt, Mission Impossible" style="width:300px;height:250px;">
+
 
