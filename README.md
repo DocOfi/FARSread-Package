@@ -58,7 +58,7 @@ To view the html files in the vignettes folder, click on the following links:
 
 ### Interactive plot
 
-An interactive dashboard can be accessed through this link [Interactive dashboard](http://rpubs.com/DocOfi/350099)
+An interactive dashboard can be accessed through this link [Interactive dashboard](http://www.rpubs.com/DocOfi/350099)
 
 > *“Because Traffic has a memory. It’s Amazing!!! It’s like a living organism”* 
 
