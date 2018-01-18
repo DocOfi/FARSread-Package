@@ -56,6 +56,10 @@ To view the html files in the vignettes folder, click on the following links:
 
 [Farsread_Functions](https://htmlpreview.github.io/?https://github.com/DocOfi/FARSread-Package/blob/master/vignettes/functions-readfars.html)
 
+### Interactive plot
+
+An interactive dashboard can be accessed through this link [Interactive dashboard]("http://rpubs.com/DocOfi/350099")
+
 > *“Because Traffic has a memory. It’s Amazing!!! It’s like a living organism”* 
 
 > >  - Ethan Hunt, Mission Impossible
